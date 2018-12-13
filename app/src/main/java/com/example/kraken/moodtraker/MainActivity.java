@@ -1,7 +1,9 @@
 package com.example.kraken.moodtraker;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,6 +42,15 @@ public class MainActivity extends AppCompatActivity {
                 nextMoodTheme();
                 currentTheme++;
 
+
+            }
+        });
+
+        imageButtonComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment alertComment = new AlertComment();
+                alertComment.show(getSupportFragmentManager(),"comment");
 
             }
         });
