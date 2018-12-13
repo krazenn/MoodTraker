@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MoodTraker</string>
+    <string name="description_history">History</string>
+
 </resources>
