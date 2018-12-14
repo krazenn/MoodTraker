@@ -1,9 +1,5 @@
 package com.example.kraken.moodtraker;
 
-import android.content.Intent;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-
 public class MoodTheme {
 
 
