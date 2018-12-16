@@ -2,6 +2,7 @@ package com.example.kraken.moodtraker;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,9 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-
 public class MainActivity extends AppCompatActivity {
-
 
     private SharedPreferences sharedPref ;
 
@@ -42,16 +41,12 @@ public class MainActivity extends AppCompatActivity {
     TicketComment lastTicketComment = new TicketComment();
     MoodTheme moodTheme = new MoodTheme();
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPref = getPreferences(MODE_PRIVATE);
+        sharedPref = getSharedPreferences(BUNDLE_COMMENT, MODE_PRIVATE);
 
         mRelativeLayout = findViewById(R.id.relativelayout);
         mImageViewSmiley = findViewById(R.id.imageViewSmiley);
@@ -62,55 +57,48 @@ public class MainActivity extends AppCompatActivity {
         currentTheme = lastTicketComment.getTheme();
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
-        currentTheme =1;
-
 
         imageButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 currentTheme++;
                 nextMoodTheme();
-
             }
         });
-
         imageButtonComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 alertDialogComment();
-
+            }
+        });
+        imageButtonHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent historyActivity = new Intent(MainActivity.this, HistoryActivity.class);
+                startActivity(historyActivity);
             }
         });
     }
 
     public void nextMoodTheme(){
-
         currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
-
     }
 
     public void alertDialogComment() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = MainActivity.this.getLayoutInflater();
         final View v = inflater.inflate(R.layout.dialog_comment, null);
         mEditTextComment = v.findViewById(R.id.inputComment);
         mEditTextComment.setText(lastTicketComment.getComment());
         builder.setView(v);
-
-
         builder.setTitle("Commentaires:")
-
                 .setPositiveButton("Enregistrer", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
                         comment = mEditTextComment.getText().toString();
-                        lastTicketComment = ticketComment;
                         saveList();
+                        lastTicketComment = ticketComment;
 
                     }
                 })
@@ -124,30 +112,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveList(){
-
-        mTicketCommentList = new ArrayList<>();
         ticketComment.setComment(comment);
         ticketComment.setTheme(currentTheme);
         ticketComment.setDate(currentDate);
         mTicketCommentList.add(ticketComment);
         String ticketComments = gson.toJson(mTicketCommentList);
         sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
+        Log.d("list com", gson.toJson(mTicketCommentList));
+
     }
 
     public void loadList (){
-        mTicketCommentList = new ArrayList<>();
         String json = sharedPref.getString(BUNDLE_COMMENT, "");
         Type type = new TypeToken<ArrayList<TicketComment>>(){}.getType();
         mTicketCommentList = gson.fromJson(json, type);
+        Log.d("ist main", gson.toJson(mTicketCommentList));
 
         if (mTicketCommentList != null) {
             lastTicketComment = mTicketCommentList.get(mTicketCommentList.size()-1);
             Log.d("last", gson.toJson(lastTicketComment));
-
-
         }else {
-            lastTicketComment.setComment("");
-
+            mTicketCommentList = new ArrayList<>();
         }
     }
 }

@@ -1,27 +1,29 @@
 package com.example.kraken.moodtraker;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 
-import android.net.Uri;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.example.kraken.moodtraker.MainActivity.BUNDLE_COMMENT;
 
 public class TicketComment {
+
     String comment;
     int theme;
     Date date;
+    List <TicketComment> listTicketComment;
+
+
+    public List<TicketComment> getListTicketComment() {
+        return listTicketComment;
+    }
+
+    public void setListTicketComment(List<TicketComment> listTicketComment) {
+        this.listTicketComment = listTicketComment;
+    }
 
     public Date getDate() {
         return date;
@@ -46,10 +48,6 @@ public class TicketComment {
     public void setTheme(int theme) {
         this.theme = theme;
     }
-
-
-
-
 
 }
 
