@@ -6,11 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,6 +37,13 @@ public class HistoryActivity extends AppCompatActivity {
     ImageView mImageViewIconeComment5;
     ImageView mImageViewIconeComment6;
     ImageView mImageViewIconeComment7;
+    Button buttonDay1 ;
+    Button buttonDay2 ;
+    Button buttonDay3 ;
+    Button buttonDay4 ;
+    Button buttonDay5 ;
+    Button buttonDay6 ;
+    Button buttonDay7 ;
 
     private SharedPreferences sharedPref ;
     List<TicketComment> listComment;
@@ -60,15 +69,28 @@ public class HistoryActivity extends AppCompatActivity {
         mImageViewIconeComment5 = findViewById(R.id.imgViewIconeComment5);
         mImageViewIconeComment6 = findViewById(R.id.imgViewIconeComment6);
         mImageViewIconeComment7 = findViewById(R.id.imgViewIconeComment7);
+        buttonDay1 = findViewById(R.id.buttonDay1);
+        buttonDay2 = findViewById(R.id.buttonDay2);
+        buttonDay3 = findViewById(R.id.buttonDay3);
+        buttonDay4 = findViewById(R.id.buttonDay4);
+        buttonDay5 = findViewById(R.id.buttonDay5);
+        buttonDay6 = findViewById(R.id.buttonDay6);
+        buttonDay7 = findViewById(R.id.buttonDay7);
         TicketComment ticketCommentHistory;
         MoodTheme moodTheme = new MoodTheme();
         sharedPref = getSharedPreferences("BUNDLE_COMMENT",MODE_PRIVATE);
-        Gson gson = new Gson();
+        final Gson gson = new Gson();
         String json = sharedPref.getString("BUNDLE_COMMENT", "");
         Type type = new TypeToken<ArrayList<TicketComment>>(){}.getType();
         listComment = gson.fromJson(json, type);
         Log.d("lst", gson.toJson(listComment));
-
+        final String commentday1;
+        final String commentday2;
+        final String commentday3;
+        final String commentday4;
+        final String commentday5;
+        final String commentday6;
+        final String commentday7;
         if (listComment == null) {
             listComment = new ArrayList<>();
         }
@@ -81,8 +103,16 @@ public class HistoryActivity extends AppCompatActivity {
             Log.d("1", gson.toJson(listComment.get(listComment.size()-1)));
             rLTicketHistoryDay1.setVisibility(View.VISIBLE);
             rLTicketHistoryDay1.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            commentday1 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment1.setVisibility(View.INVISIBLE);
+            }else {
+                buttonDay1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(),commentday1,Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         }
 
@@ -92,8 +122,18 @@ public class HistoryActivity extends AppCompatActivity {
             Log.d("2", gson.toJson(listComment.get(listComment.size()-2)));
             rLTicketHistoryDay2.setVisibility(View.VISIBLE);
             rLTicketHistoryDay2.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            commentday2 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")) {
                 mImageViewIconeComment2.setVisibility(View.INVISIBLE);
+
+            }else {
+                buttonDay2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Toast.makeText(getApplicationContext(),commentday2 ,Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         }
 
@@ -101,8 +141,16 @@ public class HistoryActivity extends AppCompatActivity {
             ticketCommentHistory = listComment.get(listComment.size()-3);
             rLTicketHistoryDay3.setVisibility(View.VISIBLE);
             rLTicketHistoryDay3.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            commentday3 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment3.setVisibility(View.INVISIBLE);
+            }else {
+                buttonDay3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), commentday3,Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         }
 
@@ -110,8 +158,16 @@ public class HistoryActivity extends AppCompatActivity {
             ticketCommentHistory = listComment.get(listComment.size()-4);
             rLTicketHistoryDay4.setVisibility(View.VISIBLE);
             rLTicketHistoryDay4.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            commentday4 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment4.setVisibility(View.INVISIBLE);
+            }else {
+                buttonDay4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), commentday4,Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         }
 
@@ -119,27 +175,50 @@ public class HistoryActivity extends AppCompatActivity {
             ticketCommentHistory = listComment.get(listComment.size()-5);
             rLTicketHistoryDay5.setVisibility(View.VISIBLE);
             rLTicketHistoryDay5.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            commentday5 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment5.setVisibility(View.INVISIBLE);
+            }else {
+                buttonDay5.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), commentday5,Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         }
 
-        if (listComment.size()-1 >=5){
-            ticketCommentHistory = listComment.get(listComment.size()-6);
+        if (listComment.size()-1 >=5) {
+            ticketCommentHistory = listComment.get(listComment.size() - 6);
             rLTicketHistoryDay6.setVisibility(View.VISIBLE);
             rLTicketHistoryDay6.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
-            if (ticketCommentHistory.getComment().equals("")){
+            commentday6 = gson.toJson(ticketCommentHistory.getComment());
+            if (ticketCommentHistory.getComment().equals("")) {
                 mImageViewIconeComment6.setVisibility(View.INVISIBLE);
+            } else {
+                buttonDay6.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), commentday6, Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         }
 
         if (listComment.size()-1 >=6){
             ticketCommentHistory = listComment.get(listComment.size()-7);
-
             rLTicketHistoryDay7.setVisibility(View.VISIBLE);
             rLTicketHistoryDay7.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            commentday7 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment7.setVisibility(View.INVISIBLE);
+            }else {
+                buttonDay7.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), commentday7,Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         }
 
