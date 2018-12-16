@@ -60,13 +60,7 @@ public class HistoryActivity extends AppCompatActivity {
         mImageViewIconeComment5 = findViewById(R.id.imgViewIconeComment5);
         mImageViewIconeComment6 = findViewById(R.id.imgViewIconeComment6);
         mImageViewIconeComment7 = findViewById(R.id.imgViewIconeComment7);
-        TicketComment ticketCommentHistory1;
-        TicketComment ticketCommentHistory2;
-        TicketComment ticketCommentHistory3;
-        TicketComment ticketCommentHistory4;
-        TicketComment ticketCommentHistory5;
-        TicketComment ticketCommentHistory6;
-        TicketComment ticketCommentHistory7;
+        TicketComment ticketCommentHistory;
         MoodTheme moodTheme = new MoodTheme();
         sharedPref = getSharedPreferences("BUNDLE_COMMENT",MODE_PRIVATE);
         Gson gson = new Gson();
@@ -78,74 +72,73 @@ public class HistoryActivity extends AppCompatActivity {
         if (listComment == null) {
             listComment = new ArrayList<>();
         }
-        ticketCommentHistory1 = listComment.get(listComment.size()-1);
-        ticketCommentHistory2 = listComment.get(listComment.size()-2);
+
+
 
 
         if (listComment.size()-1 >=0) {
-
+            ticketCommentHistory = listComment.get(listComment.size()-1);
             Log.d("1", gson.toJson(listComment.get(listComment.size()-1)));
             rLTicketHistoryDay1.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay1.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory1.getTheme()]);
-        }
-            if (ticketCommentHistory1.getComment().equals("")){
+            rLTicketHistoryDay1.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment1.setVisibility(View.INVISIBLE);
             }
+        }
 
 
         if (listComment.size()-1 >=1) {
-
+            ticketCommentHistory = listComment.get(listComment.size()-2);
             Log.d("2", gson.toJson(listComment.get(listComment.size()-2)));
             rLTicketHistoryDay2.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay2.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory2.getTheme()]);
-        }
-            if (ticketCommentHistory2.getComment().equals("")){
+            rLTicketHistoryDay2.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            if (ticketCommentHistory.getComment().equals("")) {
                 mImageViewIconeComment2.setVisibility(View.INVISIBLE);
-
+            }
         }
 
         if (listComment.size()-1 >=2){
-            ticketCommentHistory3 = listComment.get(listComment.size()-3);
+            ticketCommentHistory = listComment.get(listComment.size()-3);
             rLTicketHistoryDay3.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay3.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory3.getTheme()]);
-            if (ticketCommentHistory3.getComment().equals("")){
+            rLTicketHistoryDay3.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment3.setVisibility(View.INVISIBLE);
             }
         }
 
         if (listComment.size()-1 >=3){
-            ticketCommentHistory4 = listComment.get(listComment.size()-4);
+            ticketCommentHistory = listComment.get(listComment.size()-4);
             rLTicketHistoryDay4.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay4.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory4.getTheme()]);
-            if (ticketCommentHistory4.getComment().equals("")){
+            rLTicketHistoryDay4.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment4.setVisibility(View.INVISIBLE);
             }
         }
 
         if (listComment.size()-1 >=4){
-            ticketCommentHistory5 = listComment.get(listComment.size()-5);
+            ticketCommentHistory = listComment.get(listComment.size()-5);
             rLTicketHistoryDay5.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay5.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory5.getTheme()]);
-            if (ticketCommentHistory5.getComment().equals("")){
+            rLTicketHistoryDay5.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment5.setVisibility(View.INVISIBLE);
             }
         }
 
         if (listComment.size()-1 >=5){
-            ticketCommentHistory6 = listComment.get(listComment.size()-6);
+            ticketCommentHistory = listComment.get(listComment.size()-6);
             rLTicketHistoryDay6.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay6.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory6.getTheme()]);
-            if (ticketCommentHistory6.getComment().equals("")){
+            rLTicketHistoryDay6.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment6.setVisibility(View.INVISIBLE);
             }
         }
 
         if (listComment.size()-1 >=6){
-            ticketCommentHistory7 = listComment.get(listComment.size()-7);
+            ticketCommentHistory = listComment.get(listComment.size()-7);
 
             rLTicketHistoryDay7.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay7.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory7.getTheme()]);
-            if (ticketCommentHistory7.getComment().equals("")){
+            rLTicketHistoryDay7.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment7.setVisibility(View.INVISIBLE);
             }
         }

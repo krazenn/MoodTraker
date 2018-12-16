@@ -37,15 +37,13 @@ public class MainActivity extends AppCompatActivity {
 
     List <TicketComment> mTicketCommentList;
     Gson gson = new Gson();
-    TicketComment ticketComment = new TicketComment();
-    TicketComment lastTicketComment = new TicketComment();
+    TicketComment ticketComment;
     MoodTheme moodTheme = new MoodTheme();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         sharedPref = getSharedPreferences(BUNDLE_COMMENT, MODE_PRIVATE);
 
         mRelativeLayout = findViewById(R.id.relativelayout);
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton imageButtonComment= findViewById(R.id.imageBtnComment);
         ImageButton imageButtonHistory= findViewById(R.id.imageBtnHistory);
         loadList();
-        currentTheme = lastTicketComment.getTheme();
+        currentTheme = ticketComment.getTheme();
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
 
@@ -91,20 +89,17 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = MainActivity.this.getLayoutInflater();
         final View v = inflater.inflate(R.layout.dialog_comment, null);
         mEditTextComment = v.findViewById(R.id.inputComment);
-        mEditTextComment.setText(lastTicketComment.getComment());
+        mEditTextComment.setText(ticketComment.getComment());
         builder.setView(v);
         builder.setTitle("Commentaires:")
                 .setPositiveButton("Enregistrer", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         comment = mEditTextComment.getText().toString();
                         saveList();
-                        lastTicketComment = ticketComment;
-
                     }
                 })
                 .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
                     }
                 });
         builder.create();
@@ -112,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveList(){
+        ticketComment = new TicketComment();
         ticketComment.setComment(comment);
         ticketComment.setTheme(currentTheme);
         ticketComment.setDate(currentDate);
@@ -123,14 +119,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadList (){
+        ticketComment = new TicketComment();
         String json = sharedPref.getString(BUNDLE_COMMENT, "");
         Type type = new TypeToken<ArrayList<TicketComment>>(){}.getType();
         mTicketCommentList = gson.fromJson(json, type);
         Log.d("ist main", gson.toJson(mTicketCommentList));
 
         if (mTicketCommentList != null) {
-            lastTicketComment = mTicketCommentList.get(mTicketCommentList.size()-1);
-            Log.d("last", gson.toJson(lastTicketComment));
+            ticketComment = mTicketCommentList.get(mTicketCommentList.size()-1);
+            Log.d("last", gson.toJson(ticketComment));
         }else {
             mTicketCommentList = new ArrayList<>();
         }
