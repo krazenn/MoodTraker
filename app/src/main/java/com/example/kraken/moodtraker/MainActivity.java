@@ -16,6 +16,8 @@ import android.widget.RelativeLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,18 +26,20 @@ import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SharedPreferences sharedPref ;
+    private SharedPreferences sharedPref;
 
     private RelativeLayout mRelativeLayout;
     private ImageView mImageViewSmiley;
     static int currentTheme = 1;
     private String comment;
     private EditText mEditTextComment;
+    DateFormat format = DateFormat.getTimeInstance();
     Calendar date = Calendar.getInstance(TimeZone.getDefault());
     final Date currentDate = date.getTime();
+
     public static final String BUNDLE_COMMENT = "BUNDLE_COMMENT";
 
-    List <TicketComment> mTicketCommentList;
+    List<TicketComment> mTicketCommentList;
     Gson gson = new Gson();
     TicketComment ticketComment;
     MoodTheme moodTheme = new MoodTheme();
@@ -48,13 +52,15 @@ public class MainActivity extends AppCompatActivity {
 
         mRelativeLayout = findViewById(R.id.relativelayout);
         mImageViewSmiley = findViewById(R.id.imageViewSmiley);
-        ImageButton imageButtonNext= findViewById(R.id.imageBtnNext);
-        ImageButton imageButtonComment= findViewById(R.id.imageBtnComment);
-        ImageButton imageButtonHistory= findViewById(R.id.imageBtnHistory);
+        ImageButton imageButtonNext = findViewById(R.id.imageBtnNext);
+        ImageButton imageButtonComment = findViewById(R.id.imageBtnComment);
+        ImageButton imageButtonHistory = findViewById(R.id.imageBtnHistory);
         loadList();
         currentTheme = ticketComment.getTheme();
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
+
+        saveAuto();
 
         imageButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void nextMoodTheme(){
+    public void nextMoodTheme() {
         currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
@@ -95,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Enregistrer", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         comment = mEditTextComment.getText().toString();
+                        compareDate();
                         saveList();
                     }
                 })
@@ -106,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void saveList(){
+    public void saveList() {
         ticketComment = new TicketComment();
         ticketComment.setComment(comment);
         ticketComment.setTheme(currentTheme);
@@ -118,18 +125,36 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void loadList (){
+    public void loadList() {
         ticketComment = new TicketComment();
         String json = sharedPref.getString(BUNDLE_COMMENT, "");
-        Type type = new TypeToken<ArrayList<TicketComment>>(){}.getType();
+        Type type = new TypeToken<ArrayList<TicketComment>>() {
+        }.getType();
         mTicketCommentList = gson.fromJson(json, type);
         Log.d("ist main", gson.toJson(mTicketCommentList));
 
         if (mTicketCommentList != null) {
-            ticketComment = mTicketCommentList.get(mTicketCommentList.size()-1);
+            ticketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
             Log.d("last", gson.toJson(ticketComment));
-        }else {
+        } else {
             mTicketCommentList = new ArrayList<>();
         }
     }
+
+    public void compareDate() {
+        if (ticketComment.getDate() == currentDate) {
+            mTicketCommentList.remove(mTicketCommentList.size() - 1);
+        }
+    }
+
+    public void saveAuto() {
+        if (format.format(currentDate) == "00:00:00 AM") ;
+        {
+            mTicketCommentList.add(ticketComment);
+            String ticketComments = gson.toJson(mTicketCommentList);
+            sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
+            Log.d("date", format.format(currentDate));
+        }
+    }
+
 }
