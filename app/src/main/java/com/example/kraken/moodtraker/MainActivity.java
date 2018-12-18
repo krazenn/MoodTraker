@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText mEditTextComment;
     DateFormat format = DateFormat.getDateInstance();
     DateFormat formatTime = DateFormat.getTimeInstance();
-    Calendar date = Calendar.getInstance(TimeZone.getDefault());
-    final Date currentDate = date.getTime();
+    Date currentDate;
+
 
     public static final String BUNDLE_COMMENT = "BUNDLE_COMMENT";
 
@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         currentTheme = ticketComment.getTheme();
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
-        autoSave();
 
 
 
@@ -116,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveList() {
+        Calendar date = Calendar.getInstance(TimeZone.getDefault());
+        currentDate = date.getTime();
         ticketComment = new TicketComment();
         ticketComment.setComment(comment);
         ticketComment.setTheme(currentTheme);
