@@ -1,17 +1,16 @@
 package com.example.kraken.moodtraker;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -20,6 +19,9 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.ListPopupWindow.MATCH_PARENT;
+import static android.widget.ListPopupWindow.WRAP_CONTENT;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -44,6 +46,8 @@ public class HistoryActivity extends AppCompatActivity {
     Button buttonDay5 ;
     Button buttonDay6 ;
     Button buttonDay7 ;
+
+
 
     private SharedPreferences sharedPref ;
     List<TicketComment> listComment;
@@ -76,7 +80,7 @@ public class HistoryActivity extends AppCompatActivity {
         buttonDay5 = findViewById(R.id.buttonDay5);
         buttonDay6 = findViewById(R.id.buttonDay6);
         buttonDay7 = findViewById(R.id.buttonDay7);
-        TicketComment ticketCommentHistory;
+        TicketComment ticketCommentHistory = new TicketComment();
         MoodTheme moodTheme = new MoodTheme();
         sharedPref = getSharedPreferences("BUNDLE_COMMENT",MODE_PRIVATE);
         final Gson gson = new Gson();
@@ -88,6 +92,8 @@ public class HistoryActivity extends AppCompatActivity {
         final String commentday2;
         final String commentday3;
         final String commentday4;
+
+        int themeTicket = ticketCommentHistory.getTheme();
         final String commentday5;
         final String commentday6;
         final String commentday7;
@@ -98,12 +104,23 @@ public class HistoryActivity extends AppCompatActivity {
 
 
 
-        if (listComment.size()-1 >=0) {
+
+
+
+        if (listComment.size()-1 >= 0) {
             ticketCommentHistory = listComment.get(listComment.size()-1);
-            Log.d("1", gson.toJson(listComment.get(listComment.size()-1)));
+            Log.d("1", gson.toJson(ticketCommentHistory.getTheme()));
+
+            rLTicketHistoryDay1.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
+
+
             rLTicketHistoryDay1.setVisibility(View.VISIBLE);
             rLTicketHistoryDay1.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+
             commentday1 = gson.toJson(ticketCommentHistory.getComment());
+
+
+
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment1.setVisibility(View.INVISIBLE);
             }else {
@@ -117,12 +134,15 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
 
-        if (listComment.size()-1 >=1) {
+        if (listComment.size()-2 >=1) {
             ticketCommentHistory = listComment.get(listComment.size()-2);
-            Log.d("2", gson.toJson(listComment.get(listComment.size()-2)));
             rLTicketHistoryDay2.setVisibility(View.VISIBLE);
             rLTicketHistoryDay2.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+            rLTicketHistoryDay2.setLayoutParams(new
+                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
+
             commentday2 = gson.toJson(ticketCommentHistory.getComment());
+
             if (ticketCommentHistory.getComment().equals("")) {
                 mImageViewIconeComment2.setVisibility(View.INVISIBLE);
 
@@ -137,9 +157,10 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
 
-        if (listComment.size()-1 >=2){
+        if (listComment.size()-3 >=2){
             ticketCommentHistory = listComment.get(listComment.size()-3);
             rLTicketHistoryDay3.setVisibility(View.VISIBLE);
+            rLTicketHistoryDay3.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
             rLTicketHistoryDay3.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
             commentday3 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
@@ -154,9 +175,10 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
 
-        if (listComment.size()-1 >=3){
+        if (listComment.size()-4 >=3){
             ticketCommentHistory = listComment.get(listComment.size()-4);
             rLTicketHistoryDay4.setVisibility(View.VISIBLE);
+            rLTicketHistoryDay4.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
             rLTicketHistoryDay4.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
             commentday4 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
@@ -171,9 +193,10 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
 
-        if (listComment.size()-1 >=4){
+        if (listComment.size()-5 >=4){
             ticketCommentHistory = listComment.get(listComment.size()-5);
             rLTicketHistoryDay5.setVisibility(View.VISIBLE);
+            rLTicketHistoryDay5.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
             rLTicketHistoryDay5.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
             commentday5 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
@@ -188,9 +211,10 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
 
-        if (listComment.size()-1 >=5) {
+        if (listComment.size()-6 >=5) {
             ticketCommentHistory = listComment.get(listComment.size() - 6);
             rLTicketHistoryDay6.setVisibility(View.VISIBLE);
+            rLTicketHistoryDay6.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
             rLTicketHistoryDay6.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
             commentday6 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")) {
@@ -205,9 +229,10 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
 
-        if (listComment.size()-1 >=6){
+        if (listComment.size()-7 >=6){
             ticketCommentHistory = listComment.get(listComment.size()-7);
             rLTicketHistoryDay7.setVisibility(View.VISIBLE);
+            rLTicketHistoryDay7.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
             rLTicketHistoryDay7.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
             commentday7 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
@@ -221,6 +246,10 @@ public class HistoryActivity extends AppCompatActivity {
                 });
             }
         }
+
+    }
+    public void dynamicWeight(){
+
 
     }
 }

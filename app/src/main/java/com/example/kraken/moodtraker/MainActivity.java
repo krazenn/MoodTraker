@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
     static int currentTheme = 1;
     private String comment;
     private EditText mEditTextComment;
-    DateFormat format = DateFormat.getTimeInstance();
+    DateFormat format = DateFormat.getDateInstance();
+    DateFormat formatTime = DateFormat.getTimeInstance();
     Calendar date = Calendar.getInstance(TimeZone.getDefault());
     final Date currentDate = date.getTime();
 
@@ -59,8 +60,9 @@ public class MainActivity extends AppCompatActivity {
         currentTheme = ticketComment.getTheme();
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
+        autoSave();
 
-        saveAuto();
+
 
         imageButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Enregistrer", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         comment = mEditTextComment.getText().toString();
-                        compareDate();
+
                         saveList();
                     }
                 })
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         Type type = new TypeToken<ArrayList<TicketComment>>() {
         }.getType();
         mTicketCommentList = gson.fromJson(json, type);
-        Log.d("ist main", gson.toJson(mTicketCommentList));
+        Log.d("list main", gson.toJson(mTicketCommentList));
 
         if (mTicketCommentList != null) {
             ticketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
@@ -142,18 +144,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void compareDate() {
-        if (ticketComment.getDate() == currentDate) {
+        String compareDateCurrentDate = format.format(currentDate);
+        String compareDateTicketComment = format.format(ticketComment.getDate());
+        if (compareDateCurrentDate.equals(compareDateTicketComment)) {
             mTicketCommentList.remove(mTicketCommentList.size() - 1);
         }
     }
 
-    public void saveAuto() {
-        if (format.format(currentDate) == "00:00:00 AM") ;
+    public void autoSave() {
+        String formatCurrentTime = formatTime.format(currentDate);
+        String timeAutoSave = "12:00:00 AM";
+        Log.d("Time", formatCurrentTime);
+        if (formatCurrentTime.equals(timeAutoSave))
         {
             mTicketCommentList.add(ticketComment);
             String ticketComments = gson.toJson(mTicketCommentList);
             sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
-            Log.d("date", format.format(currentDate));
+            Log.d("TimeAutoSave", timeAutoSave);
         }
     }
 
