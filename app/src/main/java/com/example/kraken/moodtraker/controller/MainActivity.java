@@ -1,4 +1,4 @@
-package com.example.kraken.moodtraker;
+package com.example.kraken.moodtraker.controller;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,11 +13,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.example.kraken.moodtraker.R;
+import com.example.kraken.moodtraker.model.MoodTheme;
+import com.example.kraken.moodtraker.model.TicketComment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,11 +37,9 @@ public class MainActivity extends AppCompatActivity {
     private String comment;
     private EditText mEditTextComment;
     DateFormat format = DateFormat.getDateInstance();
-    DateFormat formatTime = DateFormat.getTimeInstance();
     Date currentDate;
     String compareDateCurrentDate;
     String compareDateTicketComment;
-
 
     public static final String BUNDLE_COMMENT = "BUNDLE_COMMENT";
 
@@ -62,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
         currentTheme = ticketComment.getTheme();
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
-
-
 
         imageButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,8 +126,6 @@ public class MainActivity extends AppCompatActivity {
         mTicketCommentList.add(ticketComment);
         String ticketComments = gson.toJson(mTicketCommentList);
         sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
-        Log.d("list com", gson.toJson(mTicketCommentList));
-
     }
 
     public void loadList() {
@@ -148,28 +145,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void compareDate() {
-        Calendar date = Calendar.getInstance(TimeZone.getDefault());
-        currentDate = date.getTime();
-        compareDateCurrentDate = format.format(currentDate);
-        compareDateTicketComment = format.format(ticketComment.getDate());
-        if (compareDateCurrentDate.equals(compareDateTicketComment)) {
-            mTicketCommentList.remove(mTicketCommentList.size() - 1);
-        }else {
-            mTicketCommentList.add(ticketComment);
+        if (ticketComment.getDate() != null) {
+            Calendar date = Calendar.getInstance(TimeZone.getDefault());
+            currentDate = date.getTime();
+
+            compareDateCurrentDate = format.format(currentDate);
+            compareDateTicketComment = format.format(ticketComment.getDate());
+            Log.d("date1", gson.toJson(currentDate));
+            Log.d("date2", gson.toJson(ticketComment.getDate()));
+
+            if (compareDateCurrentDate.equals(compareDateTicketComment)) {
+                mTicketCommentList.remove(mTicketCommentList.size() - 1);
+            } else {
+                mTicketCommentList.add(ticketComment);
+            }
         }
     }
 
     public void autoSave() {
-        Calendar date = Calendar.getInstance(TimeZone.getDefault());
-        currentDate = date.getTime();
-        compareDateCurrentDate = formatTime.format(currentDate);
-        compareDateTicketComment = format.format(ticketComment.getDate());
-        if (!compareDateCurrentDate.equals(compareDateTicketComment))
-        {
-            mTicketCommentList.add(ticketComment);
-            String ticketComments = gson.toJson(mTicketCommentList);
-            sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
+        if (ticketComment.getDate() != null) {
+
+            Calendar date = Calendar.getInstance(TimeZone.getDefault());
+            currentDate = date.getTime();
+
+            compareDateCurrentDate = format.format(currentDate);
+            compareDateTicketComment = format.format(ticketComment.getDate());
+
+            if (!compareDateCurrentDate.equals(compareDateTicketComment)) {
+                mTicketCommentList.add(ticketComment);
+                String ticketComments = gson.toJson(mTicketCommentList);
+                sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
+            }
         }
     }
-
 }

@@ -1,4 +1,6 @@
-package com.example.kraken.moodtraker;
+package com.example.kraken.moodtraker.model;
+
+import com.example.kraken.moodtraker.R;
 
 public class MoodTheme {
 

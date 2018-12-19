@@ -1,13 +1,7 @@
-package com.example.kraken.moodtraker;
-
-import android.content.Context;
-import android.content.SharedPreferences;
+package com.example.kraken.moodtraker.model;
 
 import java.util.Date;
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
-import static com.example.kraken.moodtraker.MainActivity.BUNDLE_COMMENT;
 
 public class TicketComment {
 

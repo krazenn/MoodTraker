@@ -1,27 +1,23 @@
-package com.example.kraken.moodtraker;
+package com.example.kraken.moodtraker.controller;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.Toast;
 
+import com.example.kraken.moodtraker.R;
+import com.example.kraken.moodtraker.model.MoodTheme;
+import com.example.kraken.moodtraker.model.TicketComment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.widget.ListPopupWindow.MATCH_PARENT;
-import static android.widget.ListPopupWindow.WRAP_CONTENT;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -47,12 +43,8 @@ public class HistoryActivity extends AppCompatActivity {
     Button buttonDay6 ;
     Button buttonDay7 ;
 
-
-
     private SharedPreferences sharedPref ;
     List<TicketComment> listComment;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +73,6 @@ public class HistoryActivity extends AppCompatActivity {
         buttonDay6 = findViewById(R.id.buttonDay6);
         buttonDay7 = findViewById(R.id.buttonDay7);
 
-
-
         MoodTheme moodTheme = new MoodTheme();
         sharedPref = getSharedPreferences("BUNDLE_COMMENT",MODE_PRIVATE);
         final Gson gson = new Gson();
@@ -97,7 +87,9 @@ public class HistoryActivity extends AppCompatActivity {
         final String commentday5;
         final String commentday6;
         final String commentday7;
+
         TicketComment ticketCommentHistory;
+
         if (listComment == null) {
             listComment = new ArrayList<>();
         }
@@ -131,14 +123,14 @@ public class HistoryActivity extends AppCompatActivity {
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment2.setVisibility(View.INVISIBLE);
                 buttonDay2.setVisibility(View.INVISIBLE);
-            }
+            } else {
                 buttonDay2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(getApplicationContext(),commentday2,Toast.LENGTH_LONG).show();
                     }
                 });
-
+            }
         }
 
         if (listComment.size()>2){
@@ -236,7 +228,6 @@ public class HistoryActivity extends AppCompatActivity {
                 });
             }
         }
-
     }
 }
 
