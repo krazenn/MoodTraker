@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     DateFormat format = DateFormat.getDateInstance();
     DateFormat formatTime = DateFormat.getTimeInstance();
     Date currentDate;
+    String compareDateCurrentDate;
+    String compareDateTicketComment;
 
 
     public static final String BUNDLE_COMMENT = "BUNDLE_COMMENT";
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         imageButtonComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                autoSave();
                 alertDialogComment();
             }
         });
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Enregistrer", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         comment = mEditTextComment.getText().toString();
-
+                        compareDate();
                         saveList();
                     }
                 })
@@ -145,23 +148,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void compareDate() {
-        String compareDateCurrentDate = format.format(currentDate);
-        String compareDateTicketComment = format.format(ticketComment.getDate());
+        Calendar date = Calendar.getInstance(TimeZone.getDefault());
+        currentDate = date.getTime();
+        compareDateCurrentDate = format.format(currentDate);
+        compareDateTicketComment = format.format(ticketComment.getDate());
         if (compareDateCurrentDate.equals(compareDateTicketComment)) {
             mTicketCommentList.remove(mTicketCommentList.size() - 1);
+        }else {
+            mTicketCommentList.add(ticketComment);
         }
     }
 
     public void autoSave() {
-        String formatCurrentTime = formatTime.format(currentDate);
-        String timeAutoSave = "12:00:00 AM";
-        Log.d("Time", formatCurrentTime);
-        if (formatCurrentTime.equals(timeAutoSave))
+        Calendar date = Calendar.getInstance(TimeZone.getDefault());
+        currentDate = date.getTime();
+        compareDateCurrentDate = formatTime.format(currentDate);
+        compareDateTicketComment = format.format(ticketComment.getDate());
+        if (!compareDateCurrentDate.equals(compareDateTicketComment))
         {
             mTicketCommentList.add(ticketComment);
             String ticketComments = gson.toJson(mTicketCommentList);
             sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
-            Log.d("TimeAutoSave", timeAutoSave);
         }
     }
 

@@ -80,7 +80,9 @@ public class HistoryActivity extends AppCompatActivity {
         buttonDay5 = findViewById(R.id.buttonDay5);
         buttonDay6 = findViewById(R.id.buttonDay6);
         buttonDay7 = findViewById(R.id.buttonDay7);
-        TicketComment ticketCommentHistory = new TicketComment();
+
+
+
         MoodTheme moodTheme = new MoodTheme();
         sharedPref = getSharedPreferences("BUNDLE_COMMENT",MODE_PRIVATE);
         final Gson gson = new Gson();
@@ -92,22 +94,15 @@ public class HistoryActivity extends AppCompatActivity {
         final String commentday2;
         final String commentday3;
         final String commentday4;
-
-        int themeTicket = ticketCommentHistory.getTheme();
         final String commentday5;
         final String commentday6;
         final String commentday7;
+        TicketComment ticketCommentHistory;
         if (listComment == null) {
             listComment = new ArrayList<>();
         }
 
-
-
-
-
-
-
-        if (listComment.size()-1 >= 0) {
+        if (listComment.size()>0) {
             ticketCommentHistory = listComment.get(listComment.size()-1);
             Log.d("1", gson.toJson(ticketCommentHistory));
             rLTicketHistoryDay1.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
@@ -126,33 +121,31 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
 
-        if (listComment.size()-2 >=1) {
+        if (listComment.size()> 1) {
             ticketCommentHistory = listComment.get(listComment.size()-2);
             rLTicketHistoryDay2.setVisibility(View.VISIBLE);
+            rLTicketHistoryDay2.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
             rLTicketHistoryDay2.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
-            rLTicketHistoryDay2.setLayoutParams(new
-                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
             commentday2 = gson.toJson(ticketCommentHistory.getComment());
-            Log.d("1", gson.toJson(ticketCommentHistory));
-            if (ticketCommentHistory.getComment().equals("")) {
+            if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment2.setVisibility(View.INVISIBLE);
-            }else {
+            }
                 buttonDay2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(),commentday2 ,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),commentday2,Toast.LENGTH_LONG).show();
                     }
                 });
-            }
+
         }
 
-        if (listComment.size()-3 >=2){
+        if (listComment.size()>2){
             ticketCommentHistory = listComment.get(listComment.size()-3);
             rLTicketHistoryDay3.setVisibility(View.VISIBLE);
             rLTicketHistoryDay3.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
             rLTicketHistoryDay3.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
             commentday3 = gson.toJson(ticketCommentHistory.getComment());
-            Log.d("1", gson.toJson(ticketCommentHistory));
+            Log.d("3", gson.toJson(ticketCommentHistory));
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment3.setVisibility(View.INVISIBLE);
             }else {
@@ -165,7 +158,7 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
 
-        if (listComment.size()-4 >=3){
+        if (listComment.size()>3){
             ticketCommentHistory = listComment.get(listComment.size()-4);
             rLTicketHistoryDay4.setVisibility(View.VISIBLE);
             rLTicketHistoryDay4.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
@@ -183,7 +176,7 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
 
-        if (listComment.size()-5 >=4){
+        if (listComment.size()>4){
             ticketCommentHistory = listComment.get(listComment.size()-5);
             rLTicketHistoryDay5.setVisibility(View.VISIBLE);
             rLTicketHistoryDay5.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
@@ -201,7 +194,7 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
 
-        if (listComment.size()-6 >=5) {
+        if (listComment.size()>5) {
             ticketCommentHistory = listComment.get(listComment.size() - 6);
             rLTicketHistoryDay6.setVisibility(View.VISIBLE);
             rLTicketHistoryDay6.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
@@ -219,7 +212,7 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
 
-        if (listComment.size()-7 >=6){
+        if (listComment.size()>6){
             ticketCommentHistory = listComment.get(listComment.size()-7);
             rLTicketHistoryDay7.setVisibility(View.VISIBLE);
             rLTicketHistoryDay7.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
