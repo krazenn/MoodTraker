@@ -42,6 +42,13 @@ public class HistoryActivity extends AppCompatActivity {
     Button buttonDay5 ;
     Button buttonDay6 ;
     Button buttonDay7 ;
+    String commentday1;
+    String commentday2;
+    String commentday3;
+    String commentday4;
+    String commentday5;
+    String commentday6;
+    String commentday7;
 
     private SharedPreferences sharedPref ;
     List<TicketComment> listComment;
@@ -73,20 +80,15 @@ public class HistoryActivity extends AppCompatActivity {
         buttonDay6 = findViewById(R.id.buttonDay6);
         buttonDay7 = findViewById(R.id.buttonDay7);
 
-        MoodTheme moodTheme = new MoodTheme();
-        sharedPref = getSharedPreferences("BUNDLE_COMMENT",MODE_PRIVATE);
         final Gson gson = new Gson();
+
+        MoodTheme moodTheme = new MoodTheme();
+
+        sharedPref = getSharedPreferences("BUNDLE_COMMENT",MODE_PRIVATE);
         String json = sharedPref.getString("BUNDLE_COMMENT", "");
         Type type = new TypeToken<ArrayList<TicketComment>>(){}.getType();
         listComment = gson.fromJson(json, type);
-        Log.d("lst", gson.toJson(listComment));
-        final String commentday1;
-        final String commentday2;
-        final String commentday3;
-        final String commentday4;
-        final String commentday5;
-        final String commentday6;
-        final String commentday7;
+
 
         TicketComment ticketCommentHistory;
 

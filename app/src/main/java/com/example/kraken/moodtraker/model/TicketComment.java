@@ -1,23 +1,13 @@
 package com.example.kraken.moodtraker.model;
 
 import java.util.Date;
-import java.util.List;
 
 public class TicketComment {
 
     String comment;
     int theme;
     Date date;
-    List <TicketComment> listTicketComment;
 
-
-    public List<TicketComment> getListTicketComment() {
-        return listTicketComment;
-    }
-
-    public void setListTicketComment(List<TicketComment> listTicketComment) {
-        this.listTicketComment = listTicketComment;
-    }
 
     public Date getDate() {
         return date;

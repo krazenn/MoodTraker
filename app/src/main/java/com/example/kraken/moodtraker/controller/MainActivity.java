@@ -88,12 +88,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void nextMoodTheme() {
+
         currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
     }
 
     public void alertDialogComment() {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = MainActivity.this.getLayoutInflater();
         final View v = inflater.inflate(R.layout.dialog_comment, null);
@@ -117,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveList() {
+
         Calendar date = Calendar.getInstance(TimeZone.getDefault());
         currentDate = date.getTime();
         ticketComment = new TicketComment();
@@ -129,30 +132,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadList() {
+
         ticketComment = new TicketComment();
         String json = sharedPref.getString(BUNDLE_COMMENT, "");
         Type type = new TypeToken<ArrayList<TicketComment>>() {
         }.getType();
         mTicketCommentList = gson.fromJson(json, type);
-        Log.d("list main", gson.toJson(mTicketCommentList));
-
         if (mTicketCommentList != null) {
             ticketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
-            Log.d("last", gson.toJson(ticketComment));
         } else {
             mTicketCommentList = new ArrayList<>();
         }
     }
 
     public void compareDate() {
+
         if (ticketComment.getDate() != null) {
             Calendar date = Calendar.getInstance(TimeZone.getDefault());
             currentDate = date.getTime();
-
             compareDateCurrentDate = format.format(currentDate);
             compareDateTicketComment = format.format(ticketComment.getDate());
-            Log.d("date1", gson.toJson(currentDate));
-            Log.d("date2", gson.toJson(ticketComment.getDate()));
 
             if (compareDateCurrentDate.equals(compareDateTicketComment)) {
                 mTicketCommentList.remove(mTicketCommentList.size() - 1);
@@ -163,11 +162,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void autoSave() {
+
         if (ticketComment.getDate() != null) {
 
             Calendar date = Calendar.getInstance(TimeZone.getDefault());
             currentDate = date.getTime();
-
             compareDateCurrentDate = format.format(currentDate);
             compareDateTicketComment = format.format(ticketComment.getDate());
 
