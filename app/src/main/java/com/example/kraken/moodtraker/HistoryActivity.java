@@ -111,6 +111,7 @@ public class HistoryActivity extends AppCompatActivity {
             commentday1 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment1.setVisibility(View.INVISIBLE);
+                buttonDay1.setVisibility(View.INVISIBLE);
             }else {
                 buttonDay1.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -129,6 +130,7 @@ public class HistoryActivity extends AppCompatActivity {
             commentday2 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment2.setVisibility(View.INVISIBLE);
+                buttonDay2.setVisibility(View.INVISIBLE);
             }
                 buttonDay2.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -148,6 +150,7 @@ public class HistoryActivity extends AppCompatActivity {
             Log.d("3", gson.toJson(ticketCommentHistory));
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment3.setVisibility(View.INVISIBLE);
+                buttonDay3.setVisibility(View.INVISIBLE);
             }else {
                 buttonDay3.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -166,6 +169,7 @@ public class HistoryActivity extends AppCompatActivity {
             commentday4 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment4.setVisibility(View.INVISIBLE);
+                buttonDay4.setVisibility(View.INVISIBLE);
             }else {
                 buttonDay4.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -184,6 +188,7 @@ public class HistoryActivity extends AppCompatActivity {
             commentday5 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment5.setVisibility(View.INVISIBLE);
+                buttonDay5.setVisibility(View.INVISIBLE);
             }else {
                 buttonDay5.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -202,6 +207,7 @@ public class HistoryActivity extends AppCompatActivity {
             commentday6 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")) {
                 mImageViewIconeComment6.setVisibility(View.INVISIBLE);
+                buttonDay6.setVisibility(View.INVISIBLE);
             } else {
                 buttonDay6.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -220,6 +226,7 @@ public class HistoryActivity extends AppCompatActivity {
             commentday7 = gson.toJson(ticketCommentHistory.getComment());
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment7.setVisibility(View.INVISIBLE);
+                buttonDay7.setVisibility(View.INVISIBLE);
             }else {
                 buttonDay7.setOnClickListener(new View.OnClickListener() {
                     @Override
