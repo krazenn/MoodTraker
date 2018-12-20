@@ -5,6 +5,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.io.IOException;
+
 public class Swipe implements View.OnTouchListener {
 
     private final GestureDetector gestureDetector;
@@ -24,10 +26,10 @@ public class Swipe implements View.OnTouchListener {
     public void onSwipeLeft() {
     }
 
-    public void onSwipeTop() {
+    public void onSwipeTop() throws IOException {
     }
 
-    public void onSwipeBottom() {
+    public void onSwipeBottom() throws IOException {
     }
 
     private final class GestureListener extends GestureDetector.SimpleOnGestureListener {

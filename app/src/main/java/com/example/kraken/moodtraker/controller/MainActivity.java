@@ -1,27 +1,28 @@
 package com.example.kraken.moodtraker.controller;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.example.kraken.moodtraker.R;
 import com.example.kraken.moodtraker.model.Swipe;
 import com.example.kraken.moodtraker.model.MoodTheme;
 import com.example.kraken.moodtraker.model.TicketComment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,16 +45,7 @@ public class MainActivity extends AppCompatActivity {
     TicketComment ticketComment;
     MoodTheme moodTheme = new MoodTheme();
     private SharedPreferences sharedPrefTemp;
-
-
-    public static int getCurrentTheme() {
-        return currentTheme;
-    }
-
-    public static void setCurrentTheme(int currentTheme) {
-        MainActivity.currentTheme = currentTheme;
-    }
-
+    MediaPlayer mediaPlayer;
 
     public void nextMoodTheme() {
         currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
@@ -61,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,15 +69,21 @@ public class MainActivity extends AppCompatActivity {
 
         loadList();
         loadTheme();
+        try {
+            playSoud();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         autoSave();
         mImageViewSmiley.setOnTouchListener(new Swipe(MainActivity.this) {
-            public void onSwipeTop() {
+            public void onSwipeTop() throws IOException {
                 currentTheme++;
                 nextMoodTheme();
+                playSoud();
                 sharedPrefTemp.edit().putInt(BUNDLE_TEMP_MOOD, currentTheme).apply();
             }
 
-            public void onSwipeBottom() {
+            public void onSwipeBottom() throws IOException {
                 if (currentTheme == 0) {
                     currentTheme = 4;
                     nextMoodTheme();
@@ -92,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     currentTheme = currentTheme - 1;
                 }
                 nextMoodTheme();
+                playSoud();
                 sharedPrefTemp.edit().putInt(BUNDLE_TEMP_MOOD, currentTheme).apply();
             }
         });
@@ -202,5 +202,12 @@ public class MainActivity extends AppCompatActivity {
                 saveList();
             }
         }
+    }
+
+    public void playSoud() throws IOException {
+        mediaPlayer = MediaPlayer.create(MainActivity.this, moodTheme.getListNoteMusic()[currentTheme]);
+        mediaPlayer.prepare();
+        mediaPlayer.start();
+
     }
 }
