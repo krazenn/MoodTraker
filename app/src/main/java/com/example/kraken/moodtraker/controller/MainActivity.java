@@ -134,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
         if (ticketComment.getDate() != null) {
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
                 mEditTextComment.setHint(ticketComment.getComment());
+            } else {
+                mEditTextComment.setHint("Saisir un commentaire:");
             }
         }
         builder.setView(v);
