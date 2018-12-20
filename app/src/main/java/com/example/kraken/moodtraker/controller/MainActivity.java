@@ -96,11 +96,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         imageButtonComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 alertDialogComment();
             }
         });
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadTheme() {
-        if (ticketComment != null) {
+        if (ticketComment.getDate() != null) {
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
                 currentTheme = sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0);
             } else {
@@ -134,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
         if (ticketComment.getDate() != null) {
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
                 mEditTextComment.setHint(ticketComment.getComment());
+                if (ticketComment.getComment().equals("")) {
+                    mEditTextComment.setHint("Saisir un commentaire:   ");
+                }
             } else {
                 mEditTextComment.setHint("Saisir un commentaire:");
             }
@@ -190,6 +191,8 @@ public class MainActivity extends AppCompatActivity {
         if (mTicketCommentList.size() != 0) {
 
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
+                Log.d("currentDate", gson.toJson(dateTicket.getCurrentDate()));
+                Log.d("currentDate2", gson.toJson(ticketComment.getDate()));
                 mTicketCommentList.remove(mTicketCommentList.size() - 1);
             } else {
                 mTicketCommentList.add(ticketComment);
@@ -201,7 +204,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (ticketComment.getDate() != null) {
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate()) == false) {
-                saveList();
+                ticketComment.setTheme(sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0));
+                String ticketComments = gson.toJson(mTicketCommentList);
+                sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
             }
         }
     }
@@ -209,11 +214,9 @@ public class MainActivity extends AppCompatActivity {
     public void playSoud() throws IOException {
         mediaPlayer = MediaPlayer.create(MainActivity.this, moodTheme.getListNoteMusic()[currentTheme]);
         mediaPlayer.start();
-
     }
 
     @Override
-
     protected void onDestroy() {
         super.onDestroy();
         if (mediaPlayer != null) {
