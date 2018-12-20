@@ -20,10 +20,6 @@ public class DateTicket {
         return currentDate;
     }
 
-    public void setCurrentDate(Date currentDate) {
-        this.currentDate = currentDate;
-    }
-
     public Boolean compareDate(Date date1, Date date2) {
         boolean equalDate = false;
         String stringDate1 = format.format(date1);

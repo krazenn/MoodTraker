@@ -84,19 +84,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadTheme() {
-        if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
-            currentTheme = sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0);
-        } else {
-            currentTheme = 0;
+        if (ticketComment.getDate() != null) {
+            if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
+                currentTheme = sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0);
+            } else {
+                currentTheme = 0;
+            }
         }
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
     }
 
-    public void loadEditText() {
-
-
-    }
 
     public void nextMoodTheme() {
 
@@ -111,8 +109,10 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = MainActivity.this.getLayoutInflater();
         final View v = inflater.inflate(R.layout.dialog_comment, null);
         mEditTextComment = v.findViewById(R.id.inputComment);
-        if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
-            mEditTextComment.setHint(ticketComment.getComment());
+        if (ticketComment.getDate() != null) {
+            if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
+                mEditTextComment.setHint(ticketComment.getComment());
+            }
         }
         builder.setView(v);
         builder.setTitle("Commentaires:")
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void compareDate() {
 
-        if (ticketComment.getDate() != null) {
+        if (mTicketCommentList.size() != 0) {
 
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
                 mTicketCommentList.remove(mTicketCommentList.size() - 1);
