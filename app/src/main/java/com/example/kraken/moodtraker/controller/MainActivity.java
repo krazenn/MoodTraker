@@ -13,19 +13,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.example.kraken.moodtraker.R;
 import com.example.kraken.moodtraker.model.MoodTheme;
 import com.example.kraken.moodtraker.model.TicketComment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     static int currentTheme = 0;
     private String comment;
     private EditText mEditTextComment;
-    Date currentDate;
     int moodTemp;
 
     public static final String BUNDLE_COMMENT = "BUNDLE_COMMENT";
@@ -140,21 +134,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createTicketComment() {
-
-        Calendar date = Calendar.getInstance(TimeZone.getDefault());
-        currentDate = date.getTime();
         ticketComment = new TicketComment();
         ticketComment.setComment(comment);
         ticketComment.setTheme(currentTheme);
-        ticketComment.setDate(currentDate);
+        ticketComment.setDate(dateTicket.getCurrentDate());
 
-        Log.d("createTi", gson.toJson(mTicketCommentList));
     }
     public void saveList() {
         mTicketCommentList.add(ticketComment);
         String ticketComments = gson.toJson(mTicketCommentList);
         sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
-        Log.d("savelist", gson.toJson(mTicketCommentList));
     }
 
     public void loadList() {
@@ -164,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
         Type type = new TypeToken<ArrayList<TicketComment>>() {
         }.getType();
         mTicketCommentList = gson.fromJson(json, type);
-        Log.d("loadlist", gson.toJson(mTicketCommentList));
         if (mTicketCommentList != null) {
             ticketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
         } else {
@@ -182,14 +170,12 @@ public class MainActivity extends AppCompatActivity {
                 mTicketCommentList.add(ticketComment);
             }
         }
-        Log.d("compare date", gson.toJson(mTicketCommentList));
     }
 
 
     public void autoSave() {
 
         if (ticketComment.getDate() != null) {
-
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate()) == false) {
                 saveList();
             }
