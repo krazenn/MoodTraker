@@ -7,13 +7,17 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+
 import android.view.LayoutInflater;
+
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
 import com.example.kraken.moodtraker.R;
+import com.example.kraken.moodtraker.Swipe;
 import com.example.kraken.moodtraker.model.MoodTheme;
 import com.example.kraken.moodtraker.model.TicketComment;
 import com.google.gson.Gson;
@@ -32,16 +36,30 @@ public class MainActivity extends AppCompatActivity {
     static int currentTheme = 0;
     private String comment;
     private EditText mEditTextComment;
-    int moodTemp;
 
     public static final String BUNDLE_COMMENT = "BUNDLE_COMMENT";
     DateTicket dateTicket = new DateTicket();
-
     List<TicketComment> mTicketCommentList;
     Gson gson = new Gson();
     TicketComment ticketComment;
     MoodTheme moodTheme = new MoodTheme();
     private SharedPreferences sharedPrefTemp;
+
+
+    public static int getCurrentTheme() {
+        return currentTheme;
+    }
+
+    public static void setCurrentTheme(int currentTheme) {
+        MainActivity.currentTheme = currentTheme;
+    }
+
+
+    public void nextMoodTheme() {
+        currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
+        mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
+        mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +70,33 @@ public class MainActivity extends AppCompatActivity {
 
         mRelativeLayout = findViewById(R.id.relativelayout);
         mImageViewSmiley = findViewById(R.id.imageViewSmiley);
-        ImageButton imageButtonNext = findViewById(R.id.imageBtnNext);
+
         ImageButton imageButtonComment = findViewById(R.id.imageBtnComment);
         ImageButton imageButtonHistory = findViewById(R.id.imageBtnHistory);
+
         loadList();
         loadTheme();
         autoSave();
-
-        imageButtonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mImageViewSmiley.setOnTouchListener(new Swipe(MainActivity.this) {
+            public void onSwipeTop() {
                 currentTheme++;
                 nextMoodTheme();
                 sharedPrefTemp.edit().putInt(BUNDLE_TEMP_MOOD, currentTheme).apply();
             }
+
+            public void onSwipeBottom() {
+                if (currentTheme == 0) {
+                    currentTheme = 4;
+                    nextMoodTheme();
+                } else {
+                    currentTheme = currentTheme - 1;
+                }
+                nextMoodTheme();
+                sharedPrefTemp.edit().putInt(BUNDLE_TEMP_MOOD, currentTheme).apply();
+            }
         });
+
+
         imageButtonComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,21 +114,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadTheme() {
-        if (ticketComment.getDate() != null) {
+        if (ticketComment != null) {
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
                 currentTheme = sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0);
             } else {
                 currentTheme = 0;
             }
         }
-        mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
-        mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
-    }
-
-
-    public void nextMoodTheme() {
-
-        currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
     }
@@ -130,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         builder.create();
+
         builder.show();
     }
 
@@ -171,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     public void autoSave() {
 
