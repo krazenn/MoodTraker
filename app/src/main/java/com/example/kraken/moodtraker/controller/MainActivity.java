@@ -206,8 +206,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void playSoud() throws IOException {
         mediaPlayer = MediaPlayer.create(MainActivity.this, moodTheme.getListNoteMusic()[currentTheme]);
-        mediaPlayer.prepare();
         mediaPlayer.start();
 
     }
+
+    @Override
+
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+
+    }
 }
+
