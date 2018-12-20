@@ -30,29 +30,31 @@ import java.util.TimeZone;
 public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPref;
+    public static final String BUNDLE_TEMP_MOOD = "BUNDLE_TEMP_MOOD";
 
     private RelativeLayout mRelativeLayout;
     private ImageView mImageViewSmiley;
-    static int currentTheme = 1;
+    static int currentTheme = 0;
     private String comment;
     private EditText mEditTextComment;
-    DateFormat format = DateFormat.getDateInstance();
     Date currentDate;
-    String compareDateCurrentDate;
-    String compareDateTicketComment;
+    int moodTemp;
 
     public static final String BUNDLE_COMMENT = "BUNDLE_COMMENT";
+    DateTicket dateTicket = new DateTicket();
 
     List<TicketComment> mTicketCommentList;
     Gson gson = new Gson();
     TicketComment ticketComment;
     MoodTheme moodTheme = new MoodTheme();
+    private SharedPreferences sharedPrefTemp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sharedPref = getSharedPreferences(BUNDLE_COMMENT, MODE_PRIVATE);
+        sharedPrefTemp = getSharedPreferences(BUNDLE_TEMP_MOOD, MODE_PRIVATE);
 
         mRelativeLayout = findViewById(R.id.relativelayout);
         mImageViewSmiley = findViewById(R.id.imageViewSmiley);
@@ -60,21 +62,21 @@ public class MainActivity extends AppCompatActivity {
         ImageButton imageButtonComment = findViewById(R.id.imageBtnComment);
         ImageButton imageButtonHistory = findViewById(R.id.imageBtnHistory);
         loadList();
-        currentTheme = ticketComment.getTheme();
-        mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
-        mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
+        loadTheme();
+        autoSave();
 
         imageButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentTheme++;
                 nextMoodTheme();
+                sharedPrefTemp.edit().putInt(BUNDLE_TEMP_MOOD, currentTheme).apply();
             }
         });
         imageButtonComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                autoSave();
+
                 alertDialogComment();
             }
         });
@@ -85,6 +87,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(historyActivity);
             }
         });
+    }
+
+    public void loadTheme() {
+        if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
+            currentTheme = sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0);
+        } else {
+            currentTheme = 0;
+        }
+        mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
+        mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
+    }
+
+    public void loadEditText() {
+
+
     }
 
     public void nextMoodTheme() {
@@ -100,14 +117,18 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = MainActivity.this.getLayoutInflater();
         final View v = inflater.inflate(R.layout.dialog_comment, null);
         mEditTextComment = v.findViewById(R.id.inputComment);
-        mEditTextComment.setText(ticketComment.getComment());
+        if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
+            mEditTextComment.setHint(ticketComment.getComment());
+        }
         builder.setView(v);
         builder.setTitle("Commentaires:")
                 .setPositiveButton("Enregistrer", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         comment = mEditTextComment.getText().toString();
+                        createTicketComment();
                         compareDate();
                         saveList();
+                        Log.d("enregistrer", gson.toJson(mTicketCommentList));
                     }
                 })
                 .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
@@ -118,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void saveList() {
+    public void createTicketComment() {
 
         Calendar date = Calendar.getInstance(TimeZone.getDefault());
         currentDate = date.getTime();
@@ -126,9 +147,14 @@ public class MainActivity extends AppCompatActivity {
         ticketComment.setComment(comment);
         ticketComment.setTheme(currentTheme);
         ticketComment.setDate(currentDate);
+
+        Log.d("createTi", gson.toJson(mTicketCommentList));
+    }
+    public void saveList() {
         mTicketCommentList.add(ticketComment);
         String ticketComments = gson.toJson(mTicketCommentList);
         sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
+        Log.d("savelist", gson.toJson(mTicketCommentList));
     }
 
     public void loadList() {
@@ -138,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         Type type = new TypeToken<ArrayList<TicketComment>>() {
         }.getType();
         mTicketCommentList = gson.fromJson(json, type);
+        Log.d("loadlist", gson.toJson(mTicketCommentList));
         if (mTicketCommentList != null) {
             ticketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
         } else {
@@ -148,32 +175,23 @@ public class MainActivity extends AppCompatActivity {
     public void compareDate() {
 
         if (ticketComment.getDate() != null) {
-            Calendar date = Calendar.getInstance(TimeZone.getDefault());
-            currentDate = date.getTime();
-            compareDateCurrentDate = format.format(currentDate);
-            compareDateTicketComment = format.format(ticketComment.getDate());
 
-            if (compareDateCurrentDate.equals(compareDateTicketComment)) {
+            if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate())) {
                 mTicketCommentList.remove(mTicketCommentList.size() - 1);
             } else {
                 mTicketCommentList.add(ticketComment);
             }
         }
+        Log.d("compare date", gson.toJson(mTicketCommentList));
     }
+
 
     public void autoSave() {
 
         if (ticketComment.getDate() != null) {
 
-            Calendar date = Calendar.getInstance(TimeZone.getDefault());
-            currentDate = date.getTime();
-            compareDateCurrentDate = format.format(currentDate);
-            compareDateTicketComment = format.format(ticketComment.getDate());
-
-            if (!compareDateCurrentDate.equals(compareDateTicketComment)) {
-                mTicketCommentList.add(ticketComment);
-                String ticketComments = gson.toJson(mTicketCommentList);
-                sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
+            if (dateTicket.compareDate(dateTicket.getCurrentDate(), ticketComment.getDate()) == false) {
+                saveList();
             }
         }
     }

@@ -98,7 +98,6 @@ public class HistoryActivity extends AppCompatActivity {
 
         if (listComment.size()>0) {
             ticketCommentHistory = listComment.get(listComment.size()-1);
-            Log.d("1", gson.toJson(ticketCommentHistory));
             rLTicketHistoryDay1.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
             rLTicketHistoryDay1.setVisibility(View.VISIBLE);
             rLTicketHistoryDay1.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
@@ -141,7 +140,6 @@ public class HistoryActivity extends AppCompatActivity {
             rLTicketHistoryDay3.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
             rLTicketHistoryDay3.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
             commentday3 = gson.toJson(ticketCommentHistory.getComment());
-            Log.d("3", gson.toJson(ticketCommentHistory));
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment3.setVisibility(View.INVISIBLE);
                 buttonDay3.setVisibility(View.INVISIBLE);
