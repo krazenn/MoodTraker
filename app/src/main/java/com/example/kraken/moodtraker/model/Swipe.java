@@ -1,4 +1,4 @@
-package com.example.kraken.moodtraker;
+package com.example.kraken.moodtraker.model;
 
 import android.content.Context;
 import android.view.GestureDetector;

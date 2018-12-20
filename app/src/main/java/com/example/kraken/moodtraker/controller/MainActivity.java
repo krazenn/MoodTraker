@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.example.kraken.moodtraker.R;
-import com.example.kraken.moodtraker.Swipe;
+import com.example.kraken.moodtraker.model.Swipe;
 import com.example.kraken.moodtraker.model.MoodTheme;
 import com.example.kraken.moodtraker.model.TicketComment;
 import com.google.gson.Gson;
