@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mImageViewSmiley.setOnTouchListener(new Swipe(MainActivity.this) {
             public void onSwipeTop() throws IOException {
+                mediaPlayer.release();
                 currentTheme++;
                 nextMoodTheme();
                 playSoud();
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onSwipeBottom() throws IOException {
+                mediaPlayer.release();
                 if (currentTheme == 0) {
                     currentTheme = 4;
                     nextMoodTheme();
