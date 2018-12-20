@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         final View v = inflater.inflate(R.layout.dialog_comment, null);
         mEditTextComment = v.findViewById(R.id.inputComment);
         if (lastTicketComment.getDate() != null) {
+            lastTicketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())) {
                 mEditTextComment.setHint(lastTicketComment.getComment());
                 if (lastTicketComment.getComment().equals("")) {
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         comment = mEditTextComment.getText().toString();
                         createTicketComment();
-                        compareDate();
+
                         saveList();
                         Log.d("enregistrer", gson.toJson(mTicketCommentList));
                     }
