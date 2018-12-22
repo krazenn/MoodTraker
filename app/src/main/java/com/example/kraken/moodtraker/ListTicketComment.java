@@ -32,6 +32,11 @@ public class ListTicketComment {
         sharedPrefTemp = context.getSharedPreferences(BUNDLE_TEMP_MOOD, 0);
     }
 
+    /**
+     * Load list from SharedPreferences
+     *
+     * @return list TicketComment
+     */
     public List<TicketComment> loadList() {
         String json = sharedPref.getString(BUNDLE_COMMENT, "");
         Type type = new TypeToken<ArrayList<TicketComment>>() {
@@ -48,21 +53,36 @@ public class ListTicketComment {
         this.listTicketComment = listTicketComment;
     }
 
+    /**
+     * Save list in SharedPreferences
+     */
     public void saveList() {
         String ticketComments = gson.toJson(listTicketComment);
         sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
     }
 
+    /**
+     * Save current theme in SharedPreferences
+     * @param currentTheme
+     */
     public void saveThemeTemp(int currentTheme) {
         sharedPrefTemp.edit().putInt(BUNDLE_TEMP_MOOD, currentTheme).apply();
 
     }
 
+    /**
+     * load current theme from SharedPreferences
+     * @return last theme choice
+     */
     public Integer loadTheme() {
         int currentTheme = sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0);
         return currentTheme;
     }
 
+    /**
+     * save the new mood selected in the day  if no save the day before
+     * @param lastTicketComment the last ticket comment entry
+     */
     public void autoSaveList(TicketComment lastTicketComment) {
         if (lastTicketComment.getDate() != null) {
             lastTicketComment = listTicketComment.get(listTicketComment.size() - 1);
@@ -80,6 +100,10 @@ public class ListTicketComment {
         }
     }
 
+    /**
+     * add TicketComment to list
+     * @param ticketComment last entry user
+     */
     public void addTicketCommentToList(TicketComment ticketComment) {
         listTicketComment.add(ticketComment);
     }

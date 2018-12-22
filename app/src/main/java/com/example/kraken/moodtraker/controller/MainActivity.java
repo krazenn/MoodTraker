@@ -104,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * load last theme show
+     */
     public void loadTheme() {
         if (lastTicketComment.getDate() != null) {
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())) {
@@ -116,6 +119,11 @@ public class MainActivity extends AppCompatActivity {
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
     }
 
+    /**
+     * AlertDialog contains Title, EditText and two Button
+     * Button Enregistrer for save curent ticket comment
+     * Button Annuler for close AlerDialog
+     */
     public void alertDialogComment() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = MainActivity.this.getLayoutInflater();
@@ -152,16 +160,25 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * Change the current theme (smiley and background color)
+     */
     public void nextMoodTheme() {
         currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
     }
 
+    /**
+     * Create TicketComment
+     */
     public void createTicketComment() {
         ticketComment = new TicketComment(comment, currentTheme, dateTicket.getCurrentDate());
     }
 
+    /**
+     * Remove the last ticket in list if Date are equal same day
+     */
     public void removeLastTicketCommentIfDateEqual() {
         if (listTicketComment.getListTicketComment().size() != 0) {
             lastTicketComment = listTicketComment.getListTicketComment().get(listTicketComment.getListTicketComment().size() - 1);
@@ -174,6 +191,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Play sound from moodTheme.getListNoteMusic
+     * @throws IOException
+     */
     public void playSoud() throws IOException {
         mediaPlayer = MediaPlayer.create(MainActivity.this, moodTheme.getListNoteMusic()[currentTheme]);
         mediaPlayer.start();

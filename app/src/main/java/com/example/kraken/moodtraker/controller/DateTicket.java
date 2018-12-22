@@ -20,6 +20,10 @@ public class DateTicket {
         return currentDate;
     }
 
+    /**
+     * Format current date and ticket comment date in string
+     * Compare if current date is equal with date ticket comment
+     */
     public Boolean compareDate(Date date1, Date date2) {
         boolean equalDate = false;
         String stringDate1 = format.format(date1);
