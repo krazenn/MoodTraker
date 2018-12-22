@@ -8,6 +8,11 @@ public class TicketComment {
     int theme;
     Date date;
 
+    public TicketComment(String comment, int theme, Date date) {
+        this.comment = comment;
+        this.theme = theme;
+        this.date = date;
+    }
 
     public Date getDate() {
         return date;
@@ -32,6 +37,7 @@ public class TicketComment {
     public void setTheme(int theme) {
         this.theme = theme;
     }
+
 
 }
 

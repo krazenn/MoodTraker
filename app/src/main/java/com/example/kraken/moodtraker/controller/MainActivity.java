@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,62 +15,51 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.example.kraken.moodtraker.ListTicketComment;
 import com.example.kraken.moodtraker.R;
-import com.example.kraken.moodtraker.model.Swipe;
 import com.example.kraken.moodtraker.model.MoodTheme;
+import com.example.kraken.moodtraker.model.Swipe;
 import com.example.kraken.moodtraker.model.TicketComment;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    private SharedPreferences sharedPref;
-    public static final String BUNDLE_TEMP_MOOD = "BUNDLE_TEMP_MOOD";
 
     private RelativeLayout mRelativeLayout;
     private ImageView mImageViewSmiley;
     static int currentTheme = 0;
     private String comment;
     private EditText mEditTextComment;
-
-    public static final String BUNDLE_COMMENT = "BUNDLE_COMMENT";
     DateTicket dateTicket = new DateTicket();
-    List<TicketComment> mTicketCommentList;
     Gson gson = new Gson();
     TicketComment ticketComment;
     TicketComment lastTicketComment;
     MoodTheme moodTheme = new MoodTheme();
-    private SharedPreferences sharedPrefTemp;
     MediaPlayer mediaPlayer;
+    ListTicketComment listTicketComment;
 
-    public void nextMoodTheme() {
-        currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
-        mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
-        mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
-    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPref = getSharedPreferences(BUNDLE_COMMENT, MODE_PRIVATE);
-        sharedPrefTemp = getSharedPreferences(BUNDLE_TEMP_MOOD, MODE_PRIVATE);
 
         mRelativeLayout = findViewById(R.id.relativelayout);
         mImageViewSmiley = findViewById(R.id.imageViewSmiley);
-
+        listTicketComment = new ListTicketComment(this);
         ImageButton imageButtonComment = findViewById(R.id.imageBtnComment);
         ImageButton imageButtonHistory = findViewById(R.id.imageBtnHistory);
 
-        loadList();
+        listTicketComment.loadList();
+        if (listTicketComment.getListTicketComment() != null) {
+            lastTicketComment = listTicketComment.getListTicketComment().get(listTicketComment.getListTicketComment().size() - 1);
+        }
         loadTheme();
-        autoSave();
+        listTicketComment.autoSaveList(lastTicketComment);
+        /*Play sound at start*/
         try {
             playSoud();
         } catch (IOException e) {
@@ -82,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 currentTheme++;
                 nextMoodTheme();
                 playSoud();
-                sharedPrefTemp.edit().putInt(BUNDLE_TEMP_MOOD, currentTheme).apply();
+                listTicketComment.saveThemeTemp(currentTheme);
             }
 
             public void onSwipeBottom() throws IOException {
@@ -95,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 nextMoodTheme();
                 playSoud();
-                sharedPrefTemp.edit().putInt(BUNDLE_TEMP_MOOD, currentTheme).apply();
+                listTicketComment.saveThemeTemp(currentTheme);
+
             }
         });
 
@@ -117,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     public void loadTheme() {
         if (lastTicketComment.getDate() != null) {
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())) {
-                currentTheme = sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0);
+                currentTheme = listTicketComment.loadTheme();
             } else {
                 currentTheme = 0;
             }
@@ -127,13 +117,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void alertDialogComment() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = MainActivity.this.getLayoutInflater();
         final View v = inflater.inflate(R.layout.dialog_comment, null);
         mEditTextComment = v.findViewById(R.id.inputComment);
         if (lastTicketComment.getDate() != null) {
-            lastTicketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
+            lastTicketComment = listTicketComment.getListTicketComment().get(listTicketComment.getListTicketComment().size() - 1);
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())) {
                 mEditTextComment.setHint(lastTicketComment.getComment());
                 if (lastTicketComment.getComment().equals("")) {
@@ -149,9 +138,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         comment = mEditTextComment.getText().toString();
                         createTicketComment();
-
-                        saveList();
-                        Log.d("enregistrer", gson.toJson(mTicketCommentList));
+                        removeLastTicketCommentIfDateEqual();
+                        listTicketComment.addTicketCommentToList(ticketComment);
+                        listTicketComment.saveList();
                     }
                 })
                 .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
@@ -163,57 +152,24 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    public void nextMoodTheme() {
+        currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
+        mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
+        mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
+    }
+
     public void createTicketComment() {
-        ticketComment = new TicketComment();
-        ticketComment.setComment(comment);
-        ticketComment.setTheme(currentTheme);
-        ticketComment.setDate(dateTicket.getCurrentDate());
-
-    }
-    public void saveList() {
-        mTicketCommentList.add(ticketComment);
-        String ticketComments = gson.toJson(mTicketCommentList);
-        sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
+        ticketComment = new TicketComment(comment, currentTheme, dateTicket.getCurrentDate());
     }
 
-    public void loadList() {
+    public void removeLastTicketCommentIfDateEqual() {
+        if (listTicketComment.getListTicketComment().size() != 0) {
+            lastTicketComment = listTicketComment.getListTicketComment().get(listTicketComment.getListTicketComment().size() - 1);
+            Log.d("ticket", gson.toJson(lastTicketComment));
 
-        lastTicketComment = new TicketComment();
-        String json = sharedPref.getString(BUNDLE_COMMENT, "");
-        Type type = new TypeToken<ArrayList<TicketComment>>() {
-        }.getType();
-        mTicketCommentList = gson.fromJson(json, type);
-        if (mTicketCommentList != null) {
-            lastTicketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
-        } else {
-            mTicketCommentList = new ArrayList<>();
-        }
-    }
-
-    public void compareDate() {
-        if (mTicketCommentList.size() != 0) {
-            lastTicketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())) {
-                Log.d("currentDate", gson.toJson(dateTicket.getCurrentDate()));
-                Log.d("currentDate2", gson.toJson(ticketComment.getDate()));
-                mTicketCommentList.remove(mTicketCommentList.size() - 1);
-            }
-        }
-    }
-
-    public void autoSave() {
-        if (lastTicketComment.getDate() != null) {
-            lastTicketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
-            if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate()) == false) {
-
-                lastTicketComment.setTheme(sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0));
-                lastTicketComment.setDate(lastTicketComment.getDate());
-                lastTicketComment.setComment(lastTicketComment.getComment());
-                mTicketCommentList.remove(mTicketCommentList.size() - 1);
-                mTicketCommentList.add(lastTicketComment);
-                String ticketComments = gson.toJson(mTicketCommentList);
-                sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
-
+                listTicketComment.getListTicketComment().remove(listTicketComment.getListTicketComment().size() - 1);
+                Log.d("date", gson.toJson(dateTicket.getCurrentDate()));
             }
         }
     }
@@ -223,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.start();
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -231,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
             mediaPlayer.release();
             mediaPlayer = null;
         }
-
     }
 }
 
