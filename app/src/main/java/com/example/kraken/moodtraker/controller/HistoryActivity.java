@@ -2,7 +2,10 @@ package com.example.kraken.moodtraker.controller;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.kraken.moodtraker.ListTicketComment;
 import com.example.kraken.moodtraker.R;
 import com.example.kraken.moodtraker.model.MoodTheme;
 import com.example.kraken.moodtraker.model.TicketComment;
@@ -22,9 +26,9 @@ import java.util.List;
 public class HistoryActivity extends AppCompatActivity {
 
     RelativeLayout rLTicketHistoryDay1;
-    RelativeLayout rLTicketHistoryDay2;
-    RelativeLayout rLTicketHistoryDay3;
-    RelativeLayout rLTicketHistoryDay4;
+    RelativeLayout layoutTicket;
+    LinearLayout mainLayout;
+    LinearLayout linearLayoutComment;
     RelativeLayout rLTicketHistoryDay5;
     RelativeLayout rLTicketHistoryDay6;
     RelativeLayout rLTicketHistoryDay7;
@@ -57,51 +61,58 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        mainLayout = findViewById(R.id.mainLayout);
 
-        rLTicketHistoryDay1 = findViewById(R.id.relativeLayoutTicketComment1);
-        rLTicketHistoryDay2 = findViewById(R.id.relativeLayoutTicketComment2);
-        rLTicketHistoryDay3 = findViewById(R.id.relativeLayoutTicketComment3);
-        rLTicketHistoryDay4 = findViewById(R.id.relativeLayoutTicketComment4);
-        rLTicketHistoryDay5 = findViewById(R.id.relativeLayoutTicketComment5);
-        rLTicketHistoryDay6 = findViewById(R.id.relativeLayoutTicketComment6);
-        rLTicketHistoryDay7 = findViewById(R.id.relativeLayoutTicketComment7);
-        mImageViewIconeComment1 = findViewById(R.id.imgViewIconeComment1);
-        mImageViewIconeComment2 = findViewById(R.id.imgViewIconeComment2);
-        mImageViewIconeComment3 = findViewById(R.id.imgViewIconeComment3);
-        mImageViewIconeComment4 = findViewById(R.id.imgViewIconeComment4);
-        mImageViewIconeComment5 = findViewById(R.id.imgViewIconeComment5);
-        mImageViewIconeComment6 = findViewById(R.id.imgViewIconeComment6);
-        mImageViewIconeComment7 = findViewById(R.id.imgViewIconeComment7);
-        buttonDay1 = findViewById(R.id.buttonDay1);
-        buttonDay2 = findViewById(R.id.buttonDay2);
-        buttonDay3 = findViewById(R.id.buttonDay3);
-        buttonDay4 = findViewById(R.id.buttonDay4);
-        buttonDay5 = findViewById(R.id.buttonDay5);
-        buttonDay6 = findViewById(R.id.buttonDay6);
-        buttonDay7 = findViewById(R.id.buttonDay7);
+
+        LayoutInflater inflater = HistoryActivity.this.getLayoutInflater();
+        View inflate = inflater.inflate(R.layout.ticket_comment, null);
+        rLTicketHistoryDay1 = inflate.findViewById(R.id.relativeLayoutTicketComment1);
+        layoutTicket = inflate.findViewById(R.id.layoutTicket);
+
+        linearLayoutComment = inflate.findViewById(R.id.linearLayoutComment1);
+        final RecyclerView rv = findViewById(R.id.list_ticket_recycler_view);
+
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+        rv.setAdapter(new MyAdapter());
+
+
+        buttonDay1 = inflate.findViewById(R.id.buttonDay1);
+
 
         final Gson gson = new Gson();
 
         MoodTheme moodTheme = new MoodTheme();
+        ListTicketComment listTicketComment = new ListTicketComment(this);
 
-        sharedPref = getSharedPreferences("BUNDLE_COMMENT",MODE_PRIVATE);
-        String json = sharedPref.getString("BUNDLE_COMMENT", "");
-        Type type = new TypeToken<ArrayList<TicketComment>>(){}.getType();
-        listComment = gson.fromJson(json, type);
 
 
         TicketComment ticketCommentHistory;
-
+        int nbDay = 7;
         if (listComment == null) {
             listComment = new ArrayList<>();
         }
-
+        int i = 1;
+        while (i < nbDay) {
         if (listComment.size()>0) {
-            ticketCommentHistory = listComment.get(listComment.size()-1);
+            ticketCommentHistory = listComment.get(listComment.size() - i);
+            //Create new TicketLayout
+            layoutTicket = new RelativeLayout(this);
+
+            linearLayoutComment = new LinearLayout(this);
+
+            rLTicketHistoryDay1 = new RelativeLayout(this);
+            rLTicketHistoryDay1.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
+            rLTicketHistoryDay1.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
+
             rLTicketHistoryDay1.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
             rLTicketHistoryDay1.setVisibility(View.VISIBLE);
             rLTicketHistoryDay1.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
             commentday1 = gson.toJson(ticketCommentHistory.getComment());
+            mainLayout.addView(rLTicketHistoryDay1);
+            mainLayout.addView(linearLayoutComment);
+            mainLayout.addView(layoutTicket);
+
             if (ticketCommentHistory.getComment().equals("")){
                 mImageViewIconeComment1.setVisibility(View.INVISIBLE);
                 buttonDay1.setVisibility(View.INVISIBLE);
@@ -113,120 +124,9 @@ public class HistoryActivity extends AppCompatActivity {
                     }
                 });
             }
-        }
 
-        if (listComment.size()> 1) {
-            ticketCommentHistory = listComment.get(listComment.size()-2);
-            rLTicketHistoryDay2.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay2.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
-            rLTicketHistoryDay2.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
-            commentday2 = gson.toJson(ticketCommentHistory.getComment());
-            if (ticketCommentHistory.getComment().equals("")){
-                mImageViewIconeComment2.setVisibility(View.INVISIBLE);
-                buttonDay2.setVisibility(View.INVISIBLE);
-            } else {
-                buttonDay2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(),commentday2,Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
         }
-
-        if (listComment.size()>2){
-            ticketCommentHistory = listComment.get(listComment.size()-3);
-            rLTicketHistoryDay3.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay3.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
-            rLTicketHistoryDay3.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
-            commentday3 = gson.toJson(ticketCommentHistory.getComment());
-            if (ticketCommentHistory.getComment().equals("")){
-                mImageViewIconeComment3.setVisibility(View.INVISIBLE);
-                buttonDay3.setVisibility(View.INVISIBLE);
-            }else {
-                buttonDay3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(), commentday3,Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        }
-
-        if (listComment.size()>3){
-            ticketCommentHistory = listComment.get(listComment.size()-4);
-            rLTicketHistoryDay4.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay4.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
-            rLTicketHistoryDay4.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
-            commentday4 = gson.toJson(ticketCommentHistory.getComment());
-            if (ticketCommentHistory.getComment().equals("")){
-                mImageViewIconeComment4.setVisibility(View.INVISIBLE);
-                buttonDay4.setVisibility(View.INVISIBLE);
-            }else {
-                buttonDay4.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(), commentday4,Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        }
-
-        if (listComment.size()>4){
-            ticketCommentHistory = listComment.get(listComment.size()-5);
-            rLTicketHistoryDay5.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay5.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
-            rLTicketHistoryDay5.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
-            commentday5 = gson.toJson(ticketCommentHistory.getComment());
-            if (ticketCommentHistory.getComment().equals("")){
-                mImageViewIconeComment5.setVisibility(View.INVISIBLE);
-                buttonDay5.setVisibility(View.INVISIBLE);
-            }else {
-                buttonDay5.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(), commentday5,Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        }
-
-        if (listComment.size()>5) {
-            ticketCommentHistory = listComment.get(listComment.size() - 6);
-            rLTicketHistoryDay6.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay6.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
-            rLTicketHistoryDay6.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
-            commentday6 = gson.toJson(ticketCommentHistory.getComment());
-            if (ticketCommentHistory.getComment().equals("")) {
-                mImageViewIconeComment6.setVisibility(View.INVISIBLE);
-                buttonDay6.setVisibility(View.INVISIBLE);
-            } else {
-                buttonDay6.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(), commentday6, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        }
-
-        if (listComment.size()>6){
-            ticketCommentHistory = listComment.get(listComment.size()-7);
-            rLTicketHistoryDay7.setVisibility(View.VISIBLE);
-            rLTicketHistoryDay7.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentHistory.getTheme()]));
-            rLTicketHistoryDay7.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentHistory.getTheme()]);
-            commentday7 = gson.toJson(ticketCommentHistory.getComment());
-            if (ticketCommentHistory.getComment().equals("")){
-                mImageViewIconeComment7.setVisibility(View.INVISIBLE);
-                buttonDay7.setVisibility(View.INVISIBLE);
-            }else {
-                buttonDay7.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(), commentday7,Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
+            i++;
         }
     }
 }

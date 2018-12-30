@@ -47,24 +47,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //declare element
         mRelativeLayout = findViewById(R.id.relativelayout);
         mImageViewSmiley = findViewById(R.id.imageViewSmiley);
         listTicketComment = new ListTicketComment(this);
         ImageButton imageButtonComment = findViewById(R.id.imageBtnComment);
         ImageButton imageButtonHistory = findViewById(R.id.imageBtnHistory);
 
+        //Load List
         listTicketComment.loadList();
         if (listTicketComment.getListTicketComment() != null) {
             lastTicketComment = listTicketComment.getListTicketComment().get(listTicketComment.getListTicketComment().size() - 1);
         }
+
+        //Load last theme save in preference
         loadTheme();
         listTicketComment.autoSaveList(lastTicketComment);
-        /*Play sound at start*/
+
+        //Play sound from last theme mood
         try {
             playSoud();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        //Swipe for change mood slide up or down
         mImageViewSmiley.setOnTouchListener(new Swipe(MainActivity.this) {
             public void onSwipeTop() throws IOException {
                 mediaPlayer.release();
@@ -89,12 +96,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Open Alertdialod when click on image button Comment
         imageButtonComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alertDialogComment();
             }
         });
+
+        //Start Activity History when click on image button History
         imageButtonHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +151,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         builder.setView(v);
+        //add title alertdialog
         builder.setTitle("Commentaires:")
+                //add button for save comment and mood
                 .setPositiveButton("Enregistrer", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         comment = mEditTextComment.getText().toString();
@@ -151,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                         listTicketComment.saveList();
                     }
                 })
+                //add button for cancel
                 .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                     }
@@ -200,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.start();
     }
 
+    //for unload memory when app onDestroy
     @Override
     protected void onDestroy() {
         super.onDestroy();
