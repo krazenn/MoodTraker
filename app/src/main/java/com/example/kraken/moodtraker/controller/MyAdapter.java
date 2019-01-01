@@ -13,13 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.kraken.moodtraker.ListTicketComment;
 import com.example.kraken.moodtraker.R;
 import com.example.kraken.moodtraker.model.MoodTheme;
 import com.example.kraken.moodtraker.model.TicketComment;
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{

@@ -37,7 +37,6 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         listTicketComment = new ListTicketComment(this);
-        listTicketComment.loadList();
         if (listTicketComment.loadList() != null) {
             ticketCommentList = listTicketComment.loadList();
         }
