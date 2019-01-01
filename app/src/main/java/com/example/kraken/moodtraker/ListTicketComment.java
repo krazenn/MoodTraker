@@ -84,7 +84,7 @@ public class ListTicketComment {
      * @param lastTicketComment the last ticket comment entry
      */
     public void autoSaveList(TicketComment lastTicketComment) {
-        if (lastTicketComment.getDate() != null) {
+        if (lastTicketComment!= null) {
             lastTicketComment = listTicketComment.get(listTicketComment.size() - 1);
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate()) == false) {
 

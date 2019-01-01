@@ -8,10 +8,7 @@ public class TicketComment {
     int theme;
     Date date;
 
-    public TicketComment(String comment, int theme, Date date) {
-        this.comment = comment;
-        this.theme = theme;
-        this.date = date;
+    public TicketComment() {
     }
 
     public Date getDate() {
