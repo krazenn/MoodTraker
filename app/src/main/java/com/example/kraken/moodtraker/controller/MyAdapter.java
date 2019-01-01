@@ -1,9 +1,6 @@
 package com.example.kraken.moodtraker.controller;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +9,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.example.kraken.moodtraker.R;
 import com.example.kraken.moodtraker.model.MoodTheme;
 import com.example.kraken.moodtraker.model.TicketComment;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
@@ -37,17 +34,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     @Override
     public void onBindViewHolder(MyAdapter.MyViewHolder myViewHolder, int i) {
         MoodTheme moodTheme = new MoodTheme();
-        myViewHolder.relativeLayoutMood.setBackgroundResource(moodTheme.getListColorBackground()[i]);
-
+        myViewHolder.relativeLayoutMood.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentList.get(ticketCommentList.size()-1).getTheme()]);
     }
-
 
     @Override
     public int getItemCount() {
+        if (ticketCommentList == null){
+            ticketCommentList = new ArrayList<>();
+        }
         return ticketCommentList.size();
        }
-
-
 
 class MyViewHolder extends RecyclerView.ViewHolder {
     RelativeLayout relativeLayoutTicket, relativeLayoutMood;
