@@ -30,6 +30,7 @@ public class HistoryActivity extends AppCompatActivity {
     List<TicketComment> ticketCommentList;
     private RecyclerView mRecyclerView;
     private MyAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
 
     @Override
@@ -41,13 +42,16 @@ public class HistoryActivity extends AppCompatActivity {
             ticketCommentList = listTicketComment.loadList();
         }
         mRecyclerView = findViewById(R.id.list_ticket_recycler_view);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapter(ticketCommentList);
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mAdapter = new MyAdapter(listTicketComment.loadList());
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        Gson gson = new Gson();
+        Log.d("list", gson.toJson(ticketCommentList));
 
 
     }
