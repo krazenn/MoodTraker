@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.kraken.moodtraker.R;
 import com.example.kraken.moodtraker.model.Day;
 import com.example.kraken.moodtraker.model.MoodTheme;
@@ -34,6 +36,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         //LIMIT NUMBER ITEMS SHOW HEIGHT / NBDAY
         int height = parent.getMeasuredHeight() / day.getNumberDay();
         int width = parent.getMeasuredWidth();
+
         listItem.setLayoutParams(new RecyclerView.LayoutParams(width, height));
         MyViewHolder viewHolder = new MyViewHolder(listItem);
         return viewHolder;
@@ -47,12 +50,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
      *                set weight, theme, visibility from TicketComment
      */
     @Override
-    public void onBindViewHolder(MyAdapter.MyViewHolder myViewHolder, int position) {
+    public void onBindViewHolder(final MyAdapter.MyViewHolder myViewHolder, int position) {
         //UPDATE VIEWHOLDER FROM A TICKETCOMMENT CONTENT
         MoodTheme moodTheme = new MoodTheme();
+        final int lastPosition = ticketCommentList.size()-position-1;
         myViewHolder.textView.setText(day.getListDay()[position]);
-        myViewHolder.relativeLayoutMood.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentList.get(ticketCommentList.size()-position-1).getTheme()]));
-        myViewHolder.relativeLayoutMood.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentList.get(ticketCommentList.size()-position-1).getTheme()]);
+        myViewHolder.relativeLayoutMood.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentList.get(lastPosition).getTheme()]));
+        myViewHolder.relativeLayoutMood.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentList.get(lastPosition).getTheme()]);
 
         if (ticketCommentList.get(ticketCommentList.size()-position-1).getComment().equals("")){
             myViewHolder.imageView.setVisibility(View.INVISIBLE);
@@ -76,7 +80,7 @@ class MyViewHolder extends RecyclerView.ViewHolder {
     ImageView imageView;
     TextView textView;
 
-    public MyViewHolder(View itemView) {
+    public MyViewHolder(final View itemView) {
         super(itemView);
         this.relativeLayoutTicket = itemView.findViewById(R.id.layoutTicket);
         this.relativeLayoutMood = itemView.findViewById(R.id.relativeLayoutTicketComment1);
@@ -84,6 +88,7 @@ class MyViewHolder extends RecyclerView.ViewHolder {
         this.button = itemView.findViewById(R.id.buttonDay1);
         this.imageView = itemView.findViewById(R.id.imgViewIconeComment1);
         this.textView = itemView.findViewById(R.id.textViewDayAgo1);
+
     }
     }
 }
