@@ -1,4 +1,5 @@
 package com.example.kraken.moodtraker.controller;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class HistoryActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +47,8 @@ public class HistoryActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapter(listTicketComment.loadList());
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new MyAdapter(getApplicationContext(), listTicketComment.loadList());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setReverseLayout(true);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);

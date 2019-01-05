@@ -1,5 +1,7 @@
 package com.example.kraken.moodtraker.controller;
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +24,12 @@ import java.util.List;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     private List<TicketComment> ticketCommentList ;
     Day day = new Day();
+    Context mContext;
+    private Activity mActivity;
 
-    public MyAdapter( List<TicketComment> ticketCommentList) {
+    public MyAdapter( Context mContext, List<TicketComment> ticketCommentList) {
         this.ticketCommentList = ticketCommentList;
+        this.mContext = mContext;
     }
 
     @Override
@@ -57,7 +62,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         myViewHolder.textView.setText(day.getListDay()[position]);
         myViewHolder.relativeLayoutMood.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentList.get(lastPosition).getTheme()]));
         myViewHolder.relativeLayoutMood.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentList.get(lastPosition).getTheme()]);
-
+        myViewHolder.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ticketCommentList.get(lastPosition).getComment().equals("")){
+                Toast.makeText(v.getContext(), ticketCommentList.get(lastPosition).getComment(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         if (ticketCommentList.get(ticketCommentList.size()-position-1).getComment().equals("")){
             myViewHolder.imageView.setVisibility(View.INVISIBLE);
         }
@@ -88,7 +100,6 @@ class MyViewHolder extends RecyclerView.ViewHolder {
         this.button = itemView.findViewById(R.id.buttonDay1);
         this.imageView = itemView.findViewById(R.id.imgViewIconeComment1);
         this.textView = itemView.findViewById(R.id.textViewDayAgo1);
-
     }
-    }
+}
 }
