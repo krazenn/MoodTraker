@@ -1,6 +1,5 @@
 package com.example.kraken.moodtraker.controller;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem= layoutInflater.inflate(R.layout.ticket_comment, parent, false);
-        MyAdapter.MyViewHolder viewHolder = new MyAdapter.MyViewHolder(listItem);
+        int height = parent.getMeasuredHeight() / 7;
+        int width = parent.getMeasuredWidth();
+        listItem.setLayoutParams(new RecyclerView.LayoutParams(width, height));
+        MyViewHolder viewHolder = new MyViewHolder(listItem);
         return viewHolder;
 
     }
@@ -35,8 +37,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     @Override
     public void onBindViewHolder(MyAdapter.MyViewHolder myViewHolder, int position) {
         MoodTheme moodTheme = new MoodTheme();
-        myViewHolder.relativeLayoutMood.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentList.get(ticketCommentList.size() - position - 1).getTheme()]);
-        myViewHolder.textView.setText(ticketCommentList.get(ticketCommentList.size() - position - 1).getComment());
+        myViewHolder.relativeLayoutMood.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentList.get(ticketCommentList.size()-position-1).getTheme()]));
+        myViewHolder.relativeLayoutMood.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentList.get(ticketCommentList.size()-position-1).getTheme()]);
+        if (ticketCommentList.get(ticketCommentList.size()-position-1).getComment().equals("")){
+            myViewHolder.imageView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -48,7 +53,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
        }
 
 class MyViewHolder extends RecyclerView.ViewHolder {
-    LinearLayout linearLayoutMain;
     RelativeLayout relativeLayoutTicket, relativeLayoutMood;
     LinearLayout linearLayoutTicket;
     Button button;
@@ -57,7 +61,6 @@ class MyViewHolder extends RecyclerView.ViewHolder {
 
     public MyViewHolder(View itemView) {
         super(itemView);
-        this.linearLayoutMain = itemView.findViewById(R.id.linearLayoutMain);
         this.relativeLayoutTicket = itemView.findViewById(R.id.layoutTicket);
         this.relativeLayoutMood = itemView.findViewById(R.id.relativeLayoutTicketComment1);
         this.linearLayoutTicket = itemView.findViewById(R.id.linearLayoutComment1);
