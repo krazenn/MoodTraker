@@ -16,6 +16,8 @@
         import android.widget.ImageButton;
         import android.widget.ImageView;
         import android.widget.RelativeLayout;
+
+        import com.example.kraken.moodtraker.ListTicketComment;
         import com.example.kraken.moodtraker.R;
         import com.example.kraken.moodtraker.model.Swipe;
         import com.example.kraken.moodtraker.model.MoodTheme;
@@ -30,23 +32,17 @@
 
 public class MainActivity extends AppCompatActivity {
 
-    private SharedPreferences sharedPref;
-    public static final String BUNDLE_TEMP_MOOD = "BUNDLE_TEMP_MOOD";
-
     private RelativeLayout mRelativeLayout;
     private ImageView mImageViewSmiley;
-    static int currentTheme = 0;
+    public static int currentTheme = 0;
     private String comment;
     private EditText mEditTextComment;
-
-    public static final String BUNDLE_COMMENT = "BUNDLE_COMMENT";
     DateTicket dateTicket = new DateTicket();
-    List<TicketComment> mTicketCommentList;
+    ListTicketComment listTicketComment;
     Gson gson = new Gson();
     TicketComment ticketComment;
     TicketComment lastTicketComment;
     MoodTheme moodTheme = new MoodTheme();
-    private SharedPreferences sharedPrefTemp;
     MediaPlayer mediaPlayer;
 
     public void nextMoodTheme() {
@@ -60,18 +56,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPref = getSharedPreferences(BUNDLE_COMMENT, MODE_PRIVATE);
-        sharedPrefTemp = getSharedPreferences(BUNDLE_TEMP_MOOD, MODE_PRIVATE);
 
         mRelativeLayout = findViewById(R.id.relativelayout);
         mImageViewSmiley = findViewById(R.id.imageViewSmiley);
-
         ImageButton imageButtonComment = findViewById(R.id.imageBtnComment);
         ImageButton imageButtonHistory = findViewById(R.id.imageBtnHistory);
 
-        loadList();
-        loadTheme();
-        autoSave();
+        listTicketComment = new ListTicketComment(this);
+        currentTheme = listTicketComment.loadThemeTemp();
+        if (listTicketComment.loadList().size() > 0){
+            lastTicketComment = listTicketComment.loadList().get(listTicketComment.loadList().size()-1);
+        }
+        listTicketComment.loadList();
+        listTicketComment.autoSaveList(lastTicketComment);
+        listTicketComment.loadStartTheme(mImageViewSmiley,mRelativeLayout,lastTicketComment);
         try {
             playSoud();
         } catch (IOException e) {
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 currentTheme++;
                 nextMoodTheme();
                 playSoud();
-                sharedPrefTemp.edit().putInt(BUNDLE_TEMP_MOOD, currentTheme).apply();
+               listTicketComment.saveThemeTemp();
             }
 
             public void onSwipeBottom() throws IOException {
@@ -96,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 nextMoodTheme();
                 playSoud();
-                sharedPrefTemp.edit().putInt(BUNDLE_TEMP_MOOD, currentTheme).apply();
+                listTicketComment.saveThemeTemp();
             }
         });
 
@@ -115,18 +113,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void loadTheme() {
-        if (lastTicketComment.getDate() != null) {
-            if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())) {
-                currentTheme = sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0);
-            } else {
-                currentTheme = 0;
-            }
-        }
-        mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
-        mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
-    }
-
     public void alertDialogComment() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -134,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         final View v = inflater.inflate(R.layout.dialog_comment, null);
         mEditTextComment = v.findViewById(R.id.inputComment);
         if (lastTicketComment.getDate() != null) {
-            lastTicketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
+            lastTicketComment = listTicketComment.loadList().get(listTicketComment.loadList().size() - 1);
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())) {
                 mEditTextComment.setHint(lastTicketComment.getComment());
                 if (lastTicketComment.getComment().equals("")) {
@@ -149,10 +135,12 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Enregistrer", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         comment = mEditTextComment.getText().toString();
+                        dateTicket = new DateTicket();
+                        listTicketComment.compareDate(lastTicketComment.getDate());
                         createTicketComment();
-
-                        saveList();
-                        Log.d("enregistrer", gson.toJson(mTicketCommentList));
+                        listTicketComment.addTicketCommentToList(ticketComment);
+                        listTicketComment.saveList();
+                        Log.d("enregistrer", gson.toJson(listTicketComment.loadList()));
                     }
                 })
                 .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
@@ -169,54 +157,6 @@ public class MainActivity extends AppCompatActivity {
         ticketComment.setComment(comment);
         ticketComment.setTheme(currentTheme);
         ticketComment.setDate(dateTicket.getCurrentDate());
-
-    }
-    public void saveList() {
-        mTicketCommentList.add(ticketComment);
-        String ticketComments = gson.toJson(mTicketCommentList);
-        sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
-    }
-
-    public void loadList() {
-
-        lastTicketComment = new TicketComment();
-        String json = sharedPref.getString(BUNDLE_COMMENT, "");
-        Type type = new TypeToken<ArrayList<TicketComment>>() {
-        }.getType();
-        mTicketCommentList = gson.fromJson(json, type);
-        if (mTicketCommentList != null) {
-            lastTicketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
-        } else {
-            mTicketCommentList = new ArrayList<>();
-        }
-    }
-
-    public void compareDate() {
-        if (mTicketCommentList.size() != 0) {
-            lastTicketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
-            if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())) {
-                Log.d("currentDate", gson.toJson(dateTicket.getCurrentDate()));
-                Log.d("currentDate2", gson.toJson(ticketComment.getDate()));
-                mTicketCommentList.remove(mTicketCommentList.size() - 1);
-            }
-        }
-    }
-
-    public void autoSave() {
-        if (lastTicketComment.getDate() != null) {
-            lastTicketComment = mTicketCommentList.get(mTicketCommentList.size() - 1);
-            if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate()) == false) {
-
-                lastTicketComment.setTheme(sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0));
-                lastTicketComment.setDate(lastTicketComment.getDate());
-                lastTicketComment.setComment(lastTicketComment.getComment());
-                mTicketCommentList.remove(mTicketCommentList.size() - 1);
-                mTicketCommentList.add(lastTicketComment);
-                String ticketComments = gson.toJson(mTicketCommentList);
-                sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
-
-            }
-        }
     }
 
     public void playSoud() throws IOException {
