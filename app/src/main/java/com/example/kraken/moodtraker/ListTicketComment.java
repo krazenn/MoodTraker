@@ -56,7 +56,7 @@ public class ListTicketComment {
     }
     public void compareDate(Date lastTicketCommentDate) {
             dateTicket = new DateTicket();
-        if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketCommentDate  )) {
+        if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketCommentDate)) {
                 Log.d("date1", gson.toJson(dateTicket.getCurrentDate()));
             Log.d("date11", gson.toJson(listTicketComment));
                 listTicketComment.remove(listTicketComment.size() - 1);
@@ -112,7 +112,7 @@ public class ListTicketComment {
      */
     public TicketComment autoSaveList(TicketComment lastTicketComment) {
         dateTicket = new DateTicket();
-        if (lastTicketComment!= null && listTicketComment != null) {
+        if (listTicketComment.size() > 0) {
             lastTicketComment = listTicketComment.get(listTicketComment.size() - 1);
         }else {
                 lastTicketComment = new TicketComment();

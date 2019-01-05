@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
         currentTheme = listTicketComment.loadThemeTemp();
         if (listTicketComment.loadList().size() > 0){
             lastTicketComment = listTicketComment.loadList().get(listTicketComment.loadList().size()-1);
+        }else {
+            lastTicketComment = new TicketComment();
+            lastTicketComment.setDate(dateTicket.getCurrentDate());
         }
         listTicketComment.autoSaveList(lastTicketComment);
         listTicketComment.loadStartTheme(mImageViewSmiley,mRelativeLayout,lastTicketComment);
@@ -117,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = MainActivity.this.getLayoutInflater();
         final View v = inflater.inflate(R.layout.dialog_comment, null);
         mEditTextComment = v.findViewById(R.id.inputComment);
-        if (lastTicketComment != null) {
+        if (listTicketComment.loadList().size() > 0) {
             lastTicketComment = listTicketComment.loadList().get(listTicketComment.loadList().size() - 1);
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())) {
                 mEditTextComment.setHint(lastTicketComment.getComment());
@@ -135,7 +138,9 @@ public class MainActivity extends AppCompatActivity {
                         comment = mEditTextComment.getText().toString();
                         dateTicket = new DateTicket();
                         createTicketComment();
-                        listTicketComment.compareDate(lastTicketComment.getDate());
+                        if (listTicketComment.loadList().size() > 0) {
+                            listTicketComment.compareDate(lastTicketComment.getDate());
+                        }
                         listTicketComment.addTicketCommentToList(ticketComment );
                         listTicketComment.saveList();
                         Log.d("enregistrer", gson.toJson(listTicketComment.loadList()));
