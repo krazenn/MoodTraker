@@ -33,8 +33,6 @@ public class HistoryActivity extends AppCompatActivity {
     private MyAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

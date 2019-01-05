@@ -1,6 +1,5 @@
 package com.example.kraken.moodtraker.controller;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,9 +22,9 @@ import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     private List<TicketComment> ticketCommentList ;
-    Day day = new Day();
+
     Context mContext;
-    private Activity mActivity;
+    int nbItemShowOnScreen = 7;
 
     public MyAdapter( Context mContext, List<TicketComment> ticketCommentList) {
         this.ticketCommentList = ticketCommentList;
@@ -38,8 +37,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         //CREATE VIEW HOLDER AND INFLATING ITS XML LAYOUT
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem= layoutInflater.inflate(R.layout.ticket_comment, parent, false);
-        //LIMIT NUMBER ITEMS SHOW HEIGHT / NBDAY
-        int height = parent.getMeasuredHeight() / day.getNumberDay();
+        //LIMIT NUMBER ITEMS SHOW HEIGHT / NUMBER ITEM WANT RETURN
+
+        int height = parent.getMeasuredHeight() / nbItemShowOnScreen;
         int width = parent.getMeasuredWidth();
 
         listItem.setLayoutParams(new RecyclerView.LayoutParams(width, height));
@@ -57,6 +57,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     @Override
     public void onBindViewHolder(final MyAdapter.MyViewHolder myViewHolder, int position) {
         //UPDATE VIEWHOLDER FROM A TICKETCOMMENT CONTENT
+        Day day = new Day();
         MoodTheme moodTheme = new MoodTheme();
         final int lastPosition = ticketCommentList.size()-position-1;
         myViewHolder.textView.setText(day.getListDay()[position]);
@@ -78,10 +79,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     @Override
     public int getItemCount() {
         //NUMBER DAY OF ITEMS RETURN
+        int nbItemReturn = 7;
         if (ticketCommentList == null){
             ticketCommentList = new ArrayList<>();
         }
-        return Math.min(ticketCommentList.size(), day.getNumberDay());
+        return Math.min(ticketCommentList.size(), nbItemReturn);
        }
 
 class MyViewHolder extends RecyclerView.ViewHolder {

@@ -1,34 +1,26 @@
+package com.example.kraken.moodtraker.controller;
 
-        package com.example.kraken.moodtraker.controller;
-
-        import android.annotation.SuppressLint;
-        import android.app.AlertDialog;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.content.SharedPreferences;
-        import android.media.MediaPlayer;
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.widget.EditText;
-        import android.widget.ImageButton;
-        import android.widget.ImageView;
-        import android.widget.RelativeLayout;
-
-        import com.example.kraken.moodtraker.ListTicketComment;
-        import com.example.kraken.moodtraker.R;
-        import com.example.kraken.moodtraker.model.Swipe;
-        import com.example.kraken.moodtraker.model.MoodTheme;
-        import com.example.kraken.moodtraker.model.TicketComment;
-        import com.google.gson.Gson;
-        import com.google.gson.reflect.TypeToken;
-
-        import java.io.IOException;
-        import java.lang.reflect.Type;
-        import java.util.ArrayList;
-        import java.util.List;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.media.MediaPlayer;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import com.example.kraken.moodtraker.ListTicketComment;
+import com.example.kraken.moodtraker.R;
+import com.example.kraken.moodtraker.model.Swipe;
+import com.example.kraken.moodtraker.model.MoodTheme;
+import com.example.kraken.moodtraker.model.TicketComment;
+import com.google.gson.Gson;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     MoodTheme moodTheme = new MoodTheme();
     MediaPlayer mediaPlayer;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,28 +62,8 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mImageViewSmiley.setOnTouchListener(new Swipe(MainActivity.this) {
-            public void onSwipeTop() throws IOException {
-                mediaPlayer.release();
-                currentTheme++;
-                nextMoodTheme();
-                playSoud();
-               listTicketComment.saveThemeTemp();
-            }
-
-            public void onSwipeBottom() throws IOException {
-                mediaPlayer.release();
-                if (currentTheme == 0) {
-                    currentTheme = 4;
-                    nextMoodTheme();
-                } else {
-                    currentTheme = currentTheme - 1;
-                }
-                nextMoodTheme();
-                playSoud();
-                listTicketComment.saveThemeTemp();
-            }
-        });
+        //Load setting Swipe
+        loadSwipe();
 
         imageButtonComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
         builder.show();
     }
-
+//Create Ticket Comment
     public TicketComment createTicketComment() {
         ticketComment = new TicketComment();
         ticketComment.setComment(comment);
@@ -162,13 +133,13 @@ public class MainActivity extends AppCompatActivity {
         ticketComment.setDate(dateTicket.getCurrentDate());
         return ticketComment;
     }
-
+//Play sound from current mood
     public void playSoud() throws IOException {
         mediaPlayer = MediaPlayer.create(MainActivity.this, moodTheme.getListNoteMusic()[currentTheme]);
         mediaPlayer.start();
     }
 
-
+//unload memory when application destroy
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -176,6 +147,34 @@ public class MainActivity extends AppCompatActivity {
             mediaPlayer.release();
             mediaPlayer = null;
         }
-
+    }
+    /*SWIPE COLOR BACKGROUND AND SMILEY UP/DOWN
+PLAY NOTE MUSIC WHEN SWIPE
+SAVE MOOD IN SHARED PREFERENCES */
+    @SuppressLint("ClickableViewAccessibility")
+    public void loadSwipe(){
+        mImageViewSmiley.setOnTouchListener(new Swipe(MainActivity.this) {
+            //UP
+            public void onSwipeTop() throws IOException {
+                mediaPlayer.release();
+                currentTheme++;
+                nextMoodTheme();
+                playSoud();
+                listTicketComment.saveThemeTemp();
+            }
+            //DOWN
+            public void onSwipeBottom() throws IOException {
+                mediaPlayer.release();
+                if (currentTheme == 0) {
+                    currentTheme = 4;
+                    nextMoodTheme();
+                } else {
+                    currentTheme = currentTheme - 1;
+                }
+                nextMoodTheme();
+                playSoud();
+                listTicketComment.saveThemeTemp();
+            }
+        });
     }
 }
