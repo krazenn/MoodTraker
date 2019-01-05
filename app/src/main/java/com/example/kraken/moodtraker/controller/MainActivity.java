@@ -45,12 +45,6 @@ public class MainActivity extends AppCompatActivity {
     MoodTheme moodTheme = new MoodTheme();
     MediaPlayer mediaPlayer;
 
-    public void nextMoodTheme() {
-        currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
-        mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
-        mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         if (listTicketComment.loadList().size() > 0){
             lastTicketComment = listTicketComment.loadList().get(listTicketComment.loadList().size()-1);
         }
-        listTicketComment.loadList();
         listTicketComment.autoSaveList(lastTicketComment);
         listTicketComment.loadStartTheme(mImageViewSmiley,mRelativeLayout,lastTicketComment);
         try {
@@ -112,6 +105,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    public void nextMoodTheme() {
+        currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
+        mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
+        mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
+    }
 
     public void alertDialogComment() {
 
@@ -119,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = MainActivity.this.getLayoutInflater();
         final View v = inflater.inflate(R.layout.dialog_comment, null);
         mEditTextComment = v.findViewById(R.id.inputComment);
-        if (lastTicketComment.getDate() != null) {
+        if (lastTicketComment != null) {
             lastTicketComment = listTicketComment.loadList().get(listTicketComment.loadList().size() - 1);
             if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())) {
                 mEditTextComment.setHint(lastTicketComment.getComment());
@@ -136,9 +134,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         comment = mEditTextComment.getText().toString();
                         dateTicket = new DateTicket();
-                        listTicketComment.compareDate(lastTicketComment.getDate());
                         createTicketComment();
-                        listTicketComment.addTicketCommentToList(ticketComment);
+                        listTicketComment.compareDate(lastTicketComment.getDate());
+                        listTicketComment.addTicketCommentToList(ticketComment );
                         listTicketComment.saveList();
                         Log.d("enregistrer", gson.toJson(listTicketComment.loadList()));
                     }
@@ -152,11 +150,12 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void createTicketComment() {
+    public TicketComment createTicketComment() {
         ticketComment = new TicketComment();
         ticketComment.setComment(comment);
         ticketComment.setTheme(currentTheme);
         ticketComment.setDate(dateTicket.getCurrentDate());
+        return ticketComment;
     }
 
     public void playSoud() throws IOException {

@@ -2,5 +2,6 @@
     <string name="app_name">MoodTraker</string>
     <string name="description_history">History</string>
     <string name="saisir_commentaire_sur_votre_humeur">saisir un commentaire</string>
+    <string name="hier">Hier</string>
 
 </resources>

@@ -43,18 +43,24 @@ public class ListTicketComment {
      * @return list TicketComment
      */
     public List<TicketComment> loadList() {
+
         String json = sharedPref.getString(BUNDLE_COMMENT, "");
         Type type = new TypeToken<ArrayList<TicketComment>>() {
         }.getType();
         listTicketComment = gson.fromJson(json, type);
+        if (listTicketComment == null){
+            listTicketComment = new ArrayList<>();
+        }
+
         return listTicketComment;
     }
     public void compareDate(Date lastTicketCommentDate) {
             dateTicket = new DateTicket();
-        if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketCommentDate)) {
+        if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketCommentDate  )) {
                 Log.d("date1", gson.toJson(dateTicket.getCurrentDate()));
-                Log.d("date2", gson.toJson(lastTicketCommentDate));
+            Log.d("date11", gson.toJson(listTicketComment));
                 listTicketComment.remove(listTicketComment.size() - 1);
+            Log.d("date2", gson.toJson(listTicketComment));
             }
         }
 
@@ -81,6 +87,12 @@ public class ListTicketComment {
     }
 
     public void loadStartTheme(ImageView imageView, RelativeLayout relativeLayout, TicketComment lastTicketComment){
+        dateTicket = new DateTicket();
+        if (lastTicketComment == null){
+            lastTicketComment = new TicketComment();
+            lastTicketComment.setComment("");
+            lastTicketComment.setDate(dateTicket.getCurrentDate());
+        }
         if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())){
             loadLastTheme(imageView , relativeLayout, loadThemeTemp());
         }else {
@@ -99,10 +111,16 @@ public class ListTicketComment {
      * @param lastTicketComment the last ticket comment entry
      */
     public TicketComment autoSaveList(TicketComment lastTicketComment) {
-        if (lastTicketComment!= null) {
+        dateTicket = new DateTicket();
+        if (lastTicketComment!= null && listTicketComment != null) {
             lastTicketComment = listTicketComment.get(listTicketComment.size() - 1);
-            dateTicket = new DateTicket();
-            if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate()) == false) {
+        }else {
+                lastTicketComment = new TicketComment();
+                lastTicketComment.setComment("");
+                lastTicketComment.setDate(dateTicket.getCurrentDate());
+
+        }
+        if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate()) == false) {
 
                 lastTicketComment.setTheme(sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0));
                 lastTicketComment.setDate(lastTicketComment.getDate());
@@ -111,8 +129,9 @@ public class ListTicketComment {
                 listTicketComment.add(lastTicketComment);
                 String ticketComments = gson.toJson(listTicketComment);
                 sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
+
             }
-        }
+
         return lastTicketComment;
     }
 

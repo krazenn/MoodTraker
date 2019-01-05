@@ -9,7 +9,7 @@ public class DateTicket {
 
 
     Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-    Date currentDate = calendar.getTime();
+    Date currentDate ;
     DateFormat format = DateFormat.getDateInstance();
 
     public String format(Date date) {
@@ -17,6 +17,8 @@ public class DateTicket {
     }
 
     public Date getCurrentDate() {
+
+        currentDate = calendar.getTime();
         return currentDate;
     }
 

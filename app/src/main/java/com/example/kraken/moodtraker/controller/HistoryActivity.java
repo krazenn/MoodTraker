@@ -46,9 +46,10 @@ public class HistoryActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new MyAdapter(listTicketComment.loadList());
-        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setReverseLayout(true);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
         Gson gson = new Gson();
         Log.d("list", gson.toJson(ticketCommentList));
