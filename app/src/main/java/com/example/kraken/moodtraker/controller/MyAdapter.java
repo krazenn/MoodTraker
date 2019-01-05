@@ -10,13 +10,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.example.kraken.moodtraker.R;
+import com.example.kraken.moodtraker.model.Day;
 import com.example.kraken.moodtraker.model.MoodTheme;
 import com.example.kraken.moodtraker.model.TicketComment;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     private List<TicketComment> ticketCommentList ;
+    Day day = new Day();
 
     public MyAdapter( List<TicketComment> ticketCommentList) {
         this.ticketCommentList = ticketCommentList;
@@ -24,9 +27,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
     @Override
     public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+
+        //CREATE VIEW HOLDER AND INFLATING ITS XML LAYOUT
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem= layoutInflater.inflate(R.layout.ticket_comment, parent, false);
-        int height = parent.getMeasuredHeight() / 7;
+        //LIMIT NUMBER ITEMS SHOW HEIGHT / NBDAY
+        int height = parent.getMeasuredHeight() / day.getNumberDay();
         int width = parent.getMeasuredWidth();
         listItem.setLayoutParams(new RecyclerView.LayoutParams(width, height));
         MyViewHolder viewHolder = new MyViewHolder(listItem);
@@ -34,11 +40,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
     }
 
+    /**
+     *
+     * @param myViewHolder Content my items content in xml
+     * @param position current position
+     *                set weight, theme, visibility from TicketComment
+     */
     @Override
     public void onBindViewHolder(MyAdapter.MyViewHolder myViewHolder, int position) {
+        //UPDATE VIEWHOLDER FROM A TICKETCOMMENT CONTENT
         MoodTheme moodTheme = new MoodTheme();
+        myViewHolder.textView.setText(day.getListDay()[position]);
         myViewHolder.relativeLayoutMood.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentList.get(ticketCommentList.size()-position-1).getTheme()]));
         myViewHolder.relativeLayoutMood.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentList.get(ticketCommentList.size()-position-1).getTheme()]);
+
         if (ticketCommentList.get(ticketCommentList.size()-position-1).getComment().equals("")){
             myViewHolder.imageView.setVisibility(View.INVISIBLE);
         }
@@ -46,13 +61,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
     @Override
     public int getItemCount() {
+        //NUMBER DAY OF ITEMS RETURN
         if (ticketCommentList == null){
             ticketCommentList = new ArrayList<>();
         }
-        return ticketCommentList.size();
+        return Math.min(ticketCommentList.size(), day.getNumberDay());
        }
 
 class MyViewHolder extends RecyclerView.ViewHolder {
+        //DECLARE ELEMENT OF MY VIEWHOLDER
     RelativeLayout relativeLayoutTicket, relativeLayoutMood;
     LinearLayout linearLayoutTicket;
     Button button;
