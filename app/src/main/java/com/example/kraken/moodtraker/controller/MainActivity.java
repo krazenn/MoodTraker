@@ -61,11 +61,7 @@ public class MainActivity extends AppCompatActivity {
         if (!dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())){
             currentTheme = 0;
         }
-        try {
-            playSoud();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         //Load setting Swipe
         loadSwipe();
 
@@ -138,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         return ticketComment;
     }
 //Play sound from current mood
-    public void playSoud() throws IOException {
+    public void playSoud()  {
         mediaPlayer = MediaPlayer.create(MainActivity.this, moodTheme.getListNoteMusic()[currentTheme]);
         mediaPlayer.start();
     }
@@ -159,16 +155,16 @@ SAVE MOOD IN SHARED PREFERENCES */
     public void loadSwipe(){
         mImageViewSmiley.setOnTouchListener(new Swipe(MainActivity.this) {
             //UP
-            public void onSwipeTop() throws IOException {
-                mediaPlayer.release();
+            public void onSwipeTop() {
+                releaseSound();
                 currentTheme++;
                 nextMoodTheme();
-                playSoud();
+                    playSoud();
                 listTicketComment.saveThemeTemp();
             }
             //DOWN
-            public void onSwipeBottom() throws IOException {
-                mediaPlayer.release();
+            public void onSwipeBottom() {
+                releaseSound();
                 if (currentTheme == 0) {
                     currentTheme = 4;
                     nextMoodTheme();
@@ -176,9 +172,15 @@ SAVE MOOD IN SHARED PREFERENCES */
                     currentTheme = currentTheme - 1;
                 }
                 nextMoodTheme();
-                playSoud();
+                    playSoud();
                 listTicketComment.saveThemeTemp();
             }
         });
+    }
+    public void releaseSound(){
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 }
