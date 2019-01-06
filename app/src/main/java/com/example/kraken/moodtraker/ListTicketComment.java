@@ -100,7 +100,7 @@ public class ListTicketComment {
         }
     }
 
-    public void loadLastTheme(ImageView imageView, RelativeLayout relativeLayout, int currentTheme){
+    private void loadLastTheme(ImageView imageView, RelativeLayout relativeLayout, int currentTheme){
         MoodTheme moodTheme = new MoodTheme();
         imageView.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         relativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
@@ -115,7 +115,6 @@ public class ListTicketComment {
         if (listTicketComment.size() > 0) {
             lastTicketComment = listTicketComment.get(listTicketComment.size() - 1);
         }else {
-                lastTicketComment = new TicketComment();
                 lastTicketComment.setComment("");
                 lastTicketComment.setDate(dateTicket.getCurrentDate());
 

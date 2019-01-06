@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         ImageButton imageButtonHistory = findViewById(R.id.imageBtnHistory);
 
         listTicketComment = new ListTicketComment(this);
-        currentTheme = listTicketComment.loadThemeTemp();
+
+
         if (listTicketComment.loadList().size() > 0){
             lastTicketComment = listTicketComment.loadList().get(listTicketComment.loadList().size()-1);
         }else {
@@ -57,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         }
         listTicketComment.autoSaveList(lastTicketComment);
         listTicketComment.loadStartTheme(mImageViewSmiley,mRelativeLayout,lastTicketComment);
+        if (!dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())){
+            currentTheme = 0;
+        }
         try {
             playSoud();
         } catch (IOException e) {
