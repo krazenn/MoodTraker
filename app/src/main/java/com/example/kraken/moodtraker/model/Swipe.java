@@ -26,10 +26,10 @@ public class Swipe implements View.OnTouchListener {
     public void onSwipeLeft() {
     }
 
-    public void onSwipeTop() throws IOException {
+    public void onSwipeTop(){
     }
 
-    public void onSwipeBottom() throws IOException {
+    public void onSwipeBottom(){
     }
 
     private final class GestureListener extends GestureDetector.SimpleOnGestureListener {

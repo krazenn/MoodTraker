@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         listTicketComment = new ListTicketComment(this);
 
-
+        //Init lastComment if listTicketComment content ticket
         if (listTicketComment.loadList().size() > 0){
             lastTicketComment = listTicketComment.loadList().get(listTicketComment.loadList().size()-1);
         }else {
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         }
         listTicketComment.autoSaveList(lastTicketComment);
         listTicketComment.loadStartTheme(mImageViewSmiley,mRelativeLayout,lastTicketComment);
+        //If new day set theme default
         if (!dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())){
             currentTheme = 0;
         }
@@ -79,12 +80,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Change theme
+     */
     public void nextMoodTheme() {
         currentTheme = currentTheme % (moodTheme.getListSmileyImage().length);
         mImageViewSmiley.setImageResource(moodTheme.getListSmileyImage()[currentTheme]);
         mRelativeLayout.setBackgroundResource(moodTheme.getListColorBackground()[currentTheme]);
     }
 
+    /**
+    *Open alert Dialog
+     */
     public void alertDialogComment() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -157,6 +165,7 @@ SAVE MOOD IN SHARED PREFERENCES */
                 currentTheme++;
                 nextMoodTheme();
                     playSoud();
+                //save theme
                 listTicketComment.saveThemeTemp();
             }
             //DOWN
