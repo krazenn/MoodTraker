@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -20,7 +19,6 @@ import com.example.kraken.moodtraker.model.Swipe;
 import com.example.kraken.moodtraker.model.MoodTheme;
 import com.example.kraken.moodtraker.model.TicketComment;
 import com.google.gson.Gson;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText mEditTextComment;
     DateTicket dateTicket = new DateTicket();
     ListTicketComment listTicketComment;
-    Gson gson = new Gson();
     TicketComment ticketComment;
     TicketComment lastTicketComment;
     MoodTheme moodTheme = new MoodTheme();
@@ -61,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         //If new day set theme default
         if (!dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())){
             currentTheme = 0;
+        }else {
+            currentTheme = listTicketComment.loadThemeTemp();
         }
 
         //Load setting Swipe
@@ -116,13 +115,16 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         comment = mEditTextComment.getText().toString();
                         dateTicket = new DateTicket();
+                        //create ticket from user input
                         createTicketComment();
+                        //Remplace lastTicketComment if same day
                         if (listTicketComment.loadList().size() > 0) {
                             listTicketComment.compareDate(lastTicketComment.getDate());
                         }
+                        //add to list
                         listTicketComment.addTicketCommentToList(ticketComment );
+                        //save list in shared
                         listTicketComment.saveList();
-                        Log.d("enregistrer", gson.toJson(listTicketComment.loadList()));
                     }
                 })
                 .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {

@@ -54,13 +54,16 @@ public class ListTicketComment {
 
         return listTicketComment;
     }
+
+    /**
+     * Compare lastTicketComment date and current date
+     *
+     * @param lastTicketCommentDate
+     */
     public void compareDate(Date lastTicketCommentDate) {
             dateTicket = new DateTicket();
         if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketCommentDate)) {
-                Log.d("date1", gson.toJson(dateTicket.getCurrentDate()));
-            Log.d("date11", gson.toJson(listTicketComment));
                 listTicketComment.remove(listTicketComment.size() - 1);
-            Log.d("date2", gson.toJson(listTicketComment));
             }
         }
 
@@ -88,6 +91,7 @@ public class ListTicketComment {
 
     public void loadStartTheme(ImageView imageView, RelativeLayout relativeLayout, TicketComment lastTicketComment){
         dateTicket = new DateTicket();
+        //set date ticket if null
         if (lastTicketComment == null){
             lastTicketComment = new TicketComment();
             lastTicketComment.setComment("");
