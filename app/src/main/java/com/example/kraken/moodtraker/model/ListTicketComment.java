@@ -1,4 +1,4 @@
-package com.example.kraken.moodtraker;
+package com.example.kraken.moodtraker.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,9 +6,6 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.example.kraken.moodtraker.controller.DateTicket;
-import com.example.kraken.moodtraker.model.MoodTheme;
-import com.example.kraken.moodtraker.model.TicketComment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -58,7 +55,7 @@ public class ListTicketComment {
     /**
      * Compare lastTicketComment date and current date
      *
-     * @param lastTicketCommentDate
+     * @param lastTicketCommentDate Last ticket comment in list
      */
     public void compareDate(Date lastTicketCommentDate) {
             dateTicket = new DateTicket();

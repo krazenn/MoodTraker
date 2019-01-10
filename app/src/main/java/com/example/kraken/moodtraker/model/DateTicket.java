@@ -1,4 +1,4 @@
-package com.example.kraken.moodtraker.controller;
+package com.example.kraken.moodtraker.model;
 
 import java.text.DateFormat;
 import java.util.Calendar;

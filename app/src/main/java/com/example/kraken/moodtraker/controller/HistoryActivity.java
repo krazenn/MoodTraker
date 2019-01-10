@@ -4,8 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import com.example.kraken.moodtraker.ListTicketComment;
+import com.example.kraken.moodtraker.model.ListTicketComment;
 import com.example.kraken.moodtraker.R;
+import com.example.kraken.moodtraker.model.MyAdapter;
 import com.example.kraken.moodtraker.model.TicketComment;
 import java.util.List;
 

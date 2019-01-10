@@ -1,4 +1,4 @@
-package com.example.kraken.moodtraker.controller;
+package com.example.kraken.moodtraker.model;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kraken.moodtraker.R;
-import com.example.kraken.moodtraker.model.Day;
-import com.example.kraken.moodtraker.model.MoodTheme;
-import com.example.kraken.moodtraker.model.TicketComment;
 
 import java.util.ArrayList;
 import java.util.List;

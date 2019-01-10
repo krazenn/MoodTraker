@@ -13,12 +13,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.example.kraken.moodtraker.ListTicketComment;
+
+import com.example.kraken.moodtraker.model.DateTicket;
+import com.example.kraken.moodtraker.model.ListTicketComment;
 import com.example.kraken.moodtraker.R;
 import com.example.kraken.moodtraker.model.Swipe;
 import com.example.kraken.moodtraker.model.MoodTheme;
 import com.example.kraken.moodtraker.model.TicketComment;
-import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
 
