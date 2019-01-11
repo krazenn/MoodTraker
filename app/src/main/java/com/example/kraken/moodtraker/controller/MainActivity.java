@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             lastTicketComment = new TicketComment();
             lastTicketComment.setDate(dateTicket.getCurrentDate());
         }
-        listTicketComment.autoSaveList(lastTicketComment);
+
         listTicketComment.loadStartTheme(mImageViewSmiley,mRelativeLayout,lastTicketComment);
         //If new day set theme default
         if (!dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())){
@@ -79,6 +79,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(historyActivity);
             }
         });
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        listTicketComment.autoSaveList(lastTicketComment);
     }
 
     /**
