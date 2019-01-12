@@ -2,6 +2,8 @@ package com.example.kraken.moodtraker.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -10,6 +12,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -112,6 +116,7 @@ public class ListTicketComment {
      * save the new mood selected in the day  if no save the day before
      * @param lastTicketComment the last ticket comment entry
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public TicketComment autoSaveList(TicketComment lastTicketComment) {
         dateTicket = new DateTicket();
         if (listTicketComment.size() > 0) {
@@ -128,15 +133,25 @@ public class ListTicketComment {
                 lastTicketComment.setComment(lastTicketComment.getComment());
                 listTicketComment.remove(listTicketComment.size() - 1);
                 listTicketComment.add(lastTicketComment);
-                listTicketComment.add(defaultTicketComment());
 
+                //period difference number day for create default ticket for day app not open
+                long periodDay = ChronoUnit.DAYS.between(dateTicket.convertToLocalDateViaInstant(dateTicket.getCurrentDate()), dateTicket.convertToLocalDateViaInstant(lastTicketComment.getDate()));
+
+                //create ticket for day not open
+                while (periodDay < 0) {
+                    Log.d("period", gson.toJson(periodDay));
+                    listTicketComment.add(defaultTicketComment());
+                    lastTicketComment = listTicketComment.get(listTicketComment.size()-1);
+                    periodDay++;
+                }
                 String ticketComments = gson.toJson(listTicketComment);
                 sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
-
             }
 
         return lastTicketComment;
     }
+
+
     public TicketComment defaultTicketComment() {
         ticketComment = new TicketComment();
         ticketComment.setComment("");

@@ -1,6 +1,11 @@
 package com.example.kraken.moodtraker.model;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.Date;
@@ -34,5 +39,11 @@ public class DateTicket {
             equalDate = true;
         }
         return equalDate;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 }
