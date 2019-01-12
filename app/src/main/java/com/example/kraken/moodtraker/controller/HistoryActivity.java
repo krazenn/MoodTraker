@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
+import com.example.kraken.moodtraker.model.DateTicket;
 import com.example.kraken.moodtraker.model.ListTicketComment;
 import com.example.kraken.moodtraker.R;
 import com.example.kraken.moodtraker.model.TicketComment;
@@ -15,6 +17,7 @@ public class HistoryActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private MyAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private TicketComment lastTicketComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class HistoryActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
     }
+
 }
 
 

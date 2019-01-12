@@ -25,6 +25,7 @@ public class ListTicketComment {
     private final Context context;
     private final SharedPreferences sharedPref;
     private final SharedPreferences sharedPrefTemp;
+    TicketComment ticketComment;
     List<TicketComment> listTicketComment;
     Gson gson = new Gson();
     DateTicket dateTicket;
@@ -127,12 +128,21 @@ public class ListTicketComment {
                 lastTicketComment.setComment(lastTicketComment.getComment());
                 listTicketComment.remove(listTicketComment.size() - 1);
                 listTicketComment.add(lastTicketComment);
+                listTicketComment.add(defaultTicketComment());
+
                 String ticketComments = gson.toJson(listTicketComment);
                 sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
 
             }
 
         return lastTicketComment;
+    }
+    public TicketComment defaultTicketComment() {
+        ticketComment = new TicketComment();
+        ticketComment.setComment("");
+        ticketComment.setTheme(0);
+        ticketComment.setDate(dateTicket.getCurrentDate());
+        return ticketComment;
     }
 
     /**

@@ -59,7 +59,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         //UPDATE VIEWHOLDER FROM A TICKETCOMMENT CONTENT
         Day day = new Day();
         MoodTheme moodTheme = new MoodTheme();
-        final int lastPosition = ticketCommentList.size()-position-1;
+        final int lastPosition = ticketCommentList.size()-2-position;
         myViewHolder.textView.setText(day.getListDay()[position]);
         myViewHolder.relativeLayoutMood.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, moodTheme.getListWeight()[ticketCommentList.get(lastPosition).getTheme()]));
         myViewHolder.relativeLayoutMood.setBackgroundResource(moodTheme.getListColorBackground()[ticketCommentList.get(lastPosition).getTheme()]);
@@ -71,7 +71,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
                 }
             }
         });
-        if (ticketCommentList.get(ticketCommentList.size()-position-1).getComment().equals("")){
+        if (ticketCommentList.get(lastPosition).getComment().equals("")){
             myViewHolder.imageView.setVisibility(View.INVISIBLE);
         }
     }

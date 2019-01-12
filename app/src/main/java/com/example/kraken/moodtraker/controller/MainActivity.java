@@ -142,13 +142,14 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 //Create Ticket Comment
-    public TicketComment createTicketComment() {
+    public void createTicketComment() {
         ticketComment = new TicketComment();
         ticketComment.setComment(comment);
         ticketComment.setTheme(currentTheme);
         ticketComment.setDate(dateTicket.getCurrentDate());
-        return ticketComment;
     }
+
+
 //Play sound from current mood
     public void playSoud()  {
         mediaPlayer = MediaPlayer.create(MainActivity.this, moodTheme.getListNoteMusic()[currentTheme]);
