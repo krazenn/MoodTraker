@@ -1,6 +1,7 @@
 package com.example.kraken.moodtraker.controller;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,13 +68,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
             @Override
             public void onClick(View v) {
                 if (!ticketCommentList.get(lastPosition).getComment().equals("")){
-                Toast.makeText(v.getContext(), ticketCommentList.get(lastPosition).getComment(), Toast.LENGTH_LONG).show();
+                showToast(ticketCommentList.get(lastPosition).getComment());
                 }
             }
         });
         if (ticketCommentList.get(lastPosition).getComment().equals("")){
             myViewHolder.imageView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void showToast(String comment){
+
+        Toast toast = Toast.makeText(mContext, comment, Toast.LENGTH_LONG);
+        View view = toast.getView();
+
+        //To change the Background of Toast
+        view.setBackgroundColor(Color.DKGRAY);
+        TextView text = view.findViewById(android.R.id.message);
+
+        //Shadow of the Of the Text Color
+        text.setTextColor(Color.WHITE);
+        toast.show();
+
     }
 
     @Override
