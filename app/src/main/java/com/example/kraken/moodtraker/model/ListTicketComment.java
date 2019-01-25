@@ -15,6 +15,7 @@ import java.lang.reflect.Type;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -119,6 +120,8 @@ public class ListTicketComment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public TicketComment autoSaveList(TicketComment lastTicketComment) {
         dateTicket = new DateTicket();
+        int i = 0;
+
         if (listTicketComment.size() > 0) {
             lastTicketComment = listTicketComment.get(listTicketComment.size() - 1);
         }else {
@@ -126,7 +129,7 @@ public class ListTicketComment {
                 lastTicketComment.setDate(dateTicket.getCurrentDate());
 
         }
-        if (dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate()) == false) {
+        if (!dateTicket.compareDate(dateTicket.getCurrentDate(), lastTicketComment.getDate())) {
 
                 lastTicketComment.setTheme(sharedPrefTemp.getInt(BUNDLE_TEMP_MOOD, 0));
                 lastTicketComment.setDate(lastTicketComment.getDate());
@@ -135,14 +138,16 @@ public class ListTicketComment {
                 listTicketComment.add(lastTicketComment);
 
                 //period difference number day for create default ticket for day app not open
-                long periodDay = ChronoUnit.DAYS.between(dateTicket.convertToLocalDateViaInstant(dateTicket.getCurrentDate()), dateTicket.convertToLocalDateViaInstant(lastTicketComment.getDate()));
 
                 //create ticket for day not open
-                while (periodDay < 0) {
-                    Log.d("period", gson.toJson(periodDay));
+                while (lastTicketComment.getDate() != dateTicket.currentDate) {
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(lastTicketComment.getDate());
+
                     listTicketComment.add(defaultTicketComment());
                     lastTicketComment = listTicketComment.get(listTicketComment.size()-1);
-                    periodDay++;
+                    c.add(Calendar.DATE, i);
+                    i++;
                 }
                 String ticketComments = gson.toJson(listTicketComment);
                 sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
