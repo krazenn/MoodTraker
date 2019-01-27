@@ -2,21 +2,16 @@ package com.example.kraken.moodtraker.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.kraken.moodtraker.controller.MainActivity.currentTheme;
 
@@ -69,7 +64,6 @@ public class ListTicketComment {
             }
         }
 
-
     /**
      * Save list in SharedPreferences
      */
@@ -116,7 +110,6 @@ public class ListTicketComment {
      * save the new mood selected in the day  if no save the day before
      * @param lastTicketComment the last ticket comment entry
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public TicketComment autoSaveList(TicketComment lastTicketComment) {
         dateTicket = new DateTicket();
         if (listTicketComment.size() > 0) {
@@ -134,15 +127,16 @@ public class ListTicketComment {
                 listTicketComment.remove(listTicketComment.size() - 1);
                 listTicketComment.add(lastTicketComment);
 
-                //period difference number day for create default ticket for day app not open
-                long periodDay = ChronoUnit.DAYS.between(dateTicket.convertToLocalDateViaInstant(dateTicket.getCurrentDate()), dateTicket.convertToLocalDateViaInstant(lastTicketComment.getDate()));
+                //difference number day for create default ticket for day app not open
+            long diff = lastTicketComment.getDate().getTime() - dateTicket.getCurrentDate().getTime();
+            long diffDay = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 
                 //create ticket for day not open
-                while (periodDay < 0) {
-                    Log.d("period", gson.toJson(periodDay));
+                while (diffDay < 0) {
+                    Log.d("period", gson.toJson(diffDay));
                     listTicketComment.add(defaultTicketComment());
                     lastTicketComment = listTicketComment.get(listTicketComment.size()-1);
-                    periodDay++;
+                    diffDay++;
                 }
                 String ticketComments = gson.toJson(listTicketComment);
                 sharedPref.edit().putString(BUNDLE_COMMENT, ticketComments).apply();
