@@ -133,7 +133,6 @@ public class ListTicketComment {
 
                 //create ticket for day not open
                 while (diffDay < 0) {
-                    Log.d("period", gson.toJson(diffDay));
                     listTicketComment.add(defaultTicketComment());
                     lastTicketComment = listTicketComment.get(listTicketComment.size()-1);
                     diffDay++;
