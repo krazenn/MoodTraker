@@ -99,7 +99,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         if (ticketCommentList == null){
             ticketCommentList = new ArrayList<>();
         }
-        return Math.min(ticketCommentList.size(), nbItemReturn);
+        return Math.min(ticketCommentList.size()-1, nbItemReturn);
        }
 
 class MyViewHolder extends RecyclerView.ViewHolder {
